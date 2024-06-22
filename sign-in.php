@@ -18,7 +18,7 @@ if (isset($_POST['login'])) {
         header('location: index.php');
     } else if ($result['account_type'] == 1) {
         header('location: admin.php');
-    }
+    }   
 } else {
     $error = "Incorrect username or password";
 }

@@ -1,15 +1,15 @@
 <?php
 
 class database{
-
+    private $conn;
     function opencon(){
-        return new PDO('mysql:host=localhost; dbname=cakes', 'root', '');
+        return new PDO('mysql:host=localhost; dbname=margacake', 'root', '');
     }
 
 
     // function check($username, $password){
     //     $con = $this->opencon();
-    //     $query = "SELECT * from signup WHERE username='".$username."'&&password='".$password."'                ";
+    //     $query = "SELECT * from users WHERE username='".$username."'&&password='".$password."'                ";
     //     return $con->query($query)->fetch();
     // }
 
@@ -18,7 +18,7 @@ function check($username, $password) {
         $con = $this->opencon();
     
         // Prepare the SQL query
-        $stmt = $con->prepare("SELECT * FROM signup WHERE username = ?");
+        $stmt = $con->prepare("SELECT * FROM users WHERE username = ?");
         $stmt->execute([$username]);
     
         // Fetch the user data as an associative array
@@ -33,110 +33,98 @@ function check($username, $password) {
         return false;
     }
 
-    function signupUsers($username, $email, $password, $profile_picture_path)
-    {
+function signup($username, $password, $firstname, $lastname, $birthday, $sex){
         $con = $this->opencon();
-        // Save user data along with profile picture path to the database
-        $con->prepare("INSERT INTO signup (username, email, password, user_profile_picture) VALUES (?,?,?,?)")->execute([$username, $email, $password, $profile_picture_path]);
-        return $con->lastInsertId();
-        }
+
+// Check if the username is already exists
+
+    $query=$con->prepare("SELECT username FROM users WHERE username =?");
+    $query->execute([$username]);
+    $existingUser= $query->fetch();
     
 
+// If the username already exists, return false
+    if($existingUser){
+    return false;
+}
+// Insert the new username and password into the database
+    return $con->prepare("INSERT INTO users(username, password,firstname,lastname,birthday,sex)
+VALUES (?, ?, ?, ?, ?, ?)")
+           ->execute([$username,$password, $firstname, $lastname, $birthday, $sex]);
+           
+}
 
- function signupUser( $username,$email,$password, $firstname, $lastname, $birthday, $sex, $profilePicture){
-    $con = $this->opencon();
-
-    $query=$con->prepare("SELECT username FROM signup WHERE username =?");
-    $query->execute([$username]);
-    $existingUser= $query->fetch();;
-
-  $con->prepare("INSERT INTO signup (username,password,firstname,lastname,birthday,sex,email,user_profile_picture)
- VALUES (?, ?, ?, ?, ?, ?, ?, ?)")->execute([$username,$password,$firstname,$lastname,$birthday,$sex,$email,$profilePicture]);
-            return $con->lastInsertId();
- }
-
-
-// function signupUser($User_Id, $username,$email,$password, $firstname, $lastname, $birthday, $sex, $profilePicture) {
+// function signupUser($username, $password, $firstname, $lastname, $birthday, $sex){
 //     $con = $this->opencon();
-//     $stmt = $con->prepare("INSERT INTO signup (firstname, lastname, birthday, sex, email, username, user_profile_picture, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)");
-//     $stmt->execute([$User_Id, $username,$email,$password, $firstname, $lastname, $birthday, $sex, $profilePicture]);
-//     return $con->lastInsertId(); // Ensure this returns the correct ID
+
+
+//     // Check if the username is already exists
+
+//     $query=$con->prepare("SELECT username FROM users WHERE username =?");
+//     $query->execute([$username]);
+//     $existingUser= $query->fetch();
+    
+
+// // If the username already exists, return false
+//     if($existingUser){
+//     return false;
+// }
+// // Insert the new username and password into the database
+//  $con->prepare("INSERT INTO users(username,password,firstname,lastname,birthday,sex)
+// VALUES (?, ?, ?, ?, ?, ?)")
+//            ->execute([$username,$password, $firstname, $lastname, $birthday, $sex]);
+//            return $con->lastInsertId();
 // }
 
-function insertAddress($User_Id, $street, $barangay, $city, $province)
-    {
-        try
-        {
-        $con = $this->opencon();
-        $con->beginTransaction();
-        $con->prepare("INSERT INTO user_address (street, barangay, city, province, registered_Id) VALUES (?,?,?,?,?)")->execute([$User_Id,$street, $barangay,  $city, $province]);
-        $con->commit();
-        return true;
-    }
-    catch (PDOException $e) {
-        $con->rollBack();
-        return false;
-    }  
-}
 
-    function prepare($full_name, $email, $subject, $message)
+function signupUser($firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture)
 {
-    try {
-        $con = $this->opencon();
-        $stmt = $con->prepare("INSERT INTO contact_messages (full_name, email, subject, message) VALUES (:full_name, :email, :subject, :message)");
-        $stmt->bindParam(':full_name', $full_name, PDO::PARAM_STR);
-        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
-        $stmt->bindParam(':subject', $subject, PDO::PARAM_STR);
-        $stmt->bindParam(':message', $message, PDO::PARAM_STR);
-        $stmt->execute();
-        return true;
-    } catch (PDOException $e) {
-        // Handle the error
-        return false;
+    $con = $this->opencon();
+    // Save user data along with profile picture path to the database
+    $con->prepare("INSERT INTO users (firstname, lastname, birthday, sex, user_email, username, password, user_profile_picture) VALUES (?,?,?,?,?,?,?,?)")->execute([$firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture]);
+    return $con->lastInsertId();
     }
+// function insertAddress($User_Id, $street, $barangay, $city, $province){
+//     $con = $this->opencon();
+//      return $con->prepare("INSERT INTO user_address (User_Id,street, barangay, city,province) VALUES(?, ?, ?, ?, ?)") ->execute([$User_Id, $street, $barangay, $city, $province]);
+    
+ 
+
+// }
+
+
+function insertAddress($User_Id, $street, $barangay, $city, $province)
+{
+    $con = $this->opencon();
+    return $con->prepare("INSERT INTO user_address (User_Id, street, barangay, city, province) VALUES (?,?,?,?,?)")->execute([$User_Id, $street, $barangay,  $city, $province]);
+      
 }
 
-    
 
-// function view(){
-//         $con = $this->opencon();
-//         return $con->query("SELECT
-//         signup.User_Id,
-//         signup.firstname,
-//         signup.lastname,
-//         signup.birthday,
-//         signup.sex,
-//         signup.username, 
-//         signup.password,
-//         signup.user_profile_picture, 
-//         CONCAT(
-//             user_address.street,' ',user_address.barangay,' ',user_address.city,' ',user_address.province
-//         ) AS address
-//     FROM
-//         signup
-//     JOIN user_address ON signup.User_Id = user_address.User_Id")->fetchAll();
 
-//     }
 
-    // function view(){
-    //     $con = $this->opencon();
-    //     return $con->query("SELECT
-    //     signup.User_Id,
-    //     registered_user.firstname,
-    //     registered_user.lastname,
-    //     registered_user.birthday,
-    //     registered_user.sex,
-    //     registered_user.username, 
-    //     registered_user.password,
-    //     signup.user_profile_picture, 
-    //     CONCAT(
-    //         user_address.street,' ',user_address.barangay,' ',user_address.city,' ',user_address.province
-    //     ) AS address
-    // FROM
-    //     signup
-    // JOIN user_address ON signup.User_Id = user_address.User_Id")->fetchAll();
+function view(){
+        $con = $this->opencon();
+        return $con->query("SELECT
+        users.User_Id,
+        users.firstname,
+        users.lastname,
+        users.birthday,
+        users.sex,
+        users.username, 
+        users.password,
+        users.user_profile_picture, 
+        CONCAT(
+            user_address.street,' ',user_address.barangay,' ',user_address.city,' ',user_address.province
+        ) AS address
+    FROM
+        users
+    JOIN user_address ON users.User_Id = user_address.User_Id")->fetchAll();
 
-    // }
+    }
+ // Function to execute a query
+
+
     
     function delete($id){
         try{
@@ -152,7 +140,7 @@ function insertAddress($User_Id, $street, $barangay, $city, $province)
             // Delete user
 
           
-            $query2 = $con->prepare("DELETE FROM signup
+            $query2 = $con->prepare("DELETE FROM users
             WHERE User_Id =?");
             $query2->execute([$id]);
 
@@ -169,20 +157,20 @@ function viewdata($id){
     try {
         $con = $this->opencon();
         $query = $con->prepare("SELECT
-        signup.User_Id,
-        signup.firstname,
-        signup.lastname,
-        signup.birthday,
-        signup.sex,
-        signup.username, 
-        signup.password,
-        signup.user_profile_picture,
+        users.User_Id,
+        users.firstname,
+        users.lastname,
+        users.birthday,
+        users.sex,
+        users.username, 
+        users.password,
+        users.user_profile_picture,
         user_address.street,user_address.barangay,user_address.city,user_address.province
         
     FROM
-        signup
-    JOIN user_address ON signup.User_Id = user_address.User_Id
-    Where signup.User_Id =?;");
+        users
+    JOIN user_address ON users.User_Id = user_address.User_Id
+    Where users.User_Id =?;");
         $query->execute([$id]);
         return $query->fetch();
     } catch (PDOException $e) {
@@ -197,7 +185,7 @@ function viewdata($id){
         try { 
             $con = $this->opencon();
             $con->beginTransaction();
-            $query = $con->prepare("UPDATE signup SET username=?, password=?, firstname=?, lastname=?, birthday=?, sex=? WHERE User_Id=?");
+            $query = $con->prepare("UPDATE users SET username=?, password=?, firstname=?, lastname=?, birthday=?, sex=? WHERE User_Id=?");
             $query->execute([$username, $password, $firstname, $lastname, $birthday, $sex, $User_Id]);
         
             // Update Successful
@@ -215,7 +203,7 @@ function viewdata($id){
         try { 
             $con = $this->opencon();
             $con->beginTransaction();
-            $query = $con->prepare("UPDATE user_address SET street=?, barangay=?, city=?, province=?  WHERE registered_ID=?");
+            $query = $con->prepare("UPDATE user_address SET street=?, barangay=?, city=?, province=?  WHERE User_Id=?");
             $query->execute([$street,$barangay,$city,$province, $User_Id]);
         
             // Update Successful
@@ -231,7 +219,7 @@ function viewdata($id){
     
         
     // // function check_account_type($username) {
-    //     $query = $this->connection->prepare("SELECT account_type FROM signup WHERE username = :username");
+    //     $query = $this->connection->prepare("SELECT account_type FROM users WHERE username = :username");
     //     $query->bindParam(":username", $username);
     //     $query->execute();
 
@@ -249,7 +237,7 @@ function viewdata($id){
         $con = $this->opencon();
     
         // Prepare the SQL query
-        $query = $con->prepare("SELECT password FROM signup WHERE User_Id = ?");
+        $query = $con->prepare("SELECT password FROM users WHERE User_Id = ?");
         $query->execute([$User_Id]);
     
         // Fetch the user data as an associative array
@@ -267,7 +255,7 @@ function updatePassword($userId, $hashedPassword){
         try {
             $con = $this->opencon();
             $con->beginTransaction();
-            $query = $con->prepare("UPDATE signup SET password = ? WHERE User_Id = ?");
+            $query = $con->prepare("UPDATE users SET password = ? WHERE User_Id = ?");
             $query->execute([$hashedPassword, $userId]);
             // Update successful
             $con->commit();
@@ -282,7 +270,7 @@ function updatePassword($userId, $hashedPassword){
             try {
                 $con = $this->opencon();
                 $con->beginTransaction();
-                $query = $con->prepare("UPDATE signup SET user_profile_picture = ? WHERE User_Id = ?");
+                $query = $con->prepare("UPDATE users SET user_profile_picture = ? WHERE User_Id = ?");
                 $query->execute([$profilePicturePath, $userID]);
                 // Update successful`
                 $con->commit();

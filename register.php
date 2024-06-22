@@ -1,36 +1,42 @@
 <?php
-session_start();
-$current_page = basename($_SERVER['PHP_SELF']);
+ 
+
 require_once('classes/database.php');
 $con = new database();
 $error = "";
 if (isset($_POST['multisave'])) {
-  // Getting the account information
-  $username = $_POST['username'];
-  $email = $_POST['email'];
-  $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    
+    // Getting the account information
+    $username = $_POST['username'];
+    $email = $_POST['email'];
 
-  // Getting the personal information
-  $firstname = $_POST['firstname'];
-  $lastname = $_POST['lastname'];
-  $birthday = $_POST['birthday'];
-  $sex = $_POST['sex'];
-
-  // Getting the address information
-  $street = $_POST['street'];
-  $barangay = $_POST['barangay_text'];
-  $city = $_POST['city_text'];
-  $province = $_POST['region_text'];
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    
+    // Getting the personal information
+    $firstname = $_POST['firstname'];
+    $lastname = $_POST['lastname'];
+    $birthday = $_POST['birthday'];
+    $sex = $_POST['sex'];
+  
+    // Getting the address information
+    $street = $_POST['user_street'];
+    $barangay = $_POST['barangay_text'];
+    $city = $_POST['city_text'];
+    $province = $_POST['region_text'];
 
    // Handle file upload
    $target_dir = "uploads/";
    $original_file_name = basename($_FILES["profile_picture"]["name"]);
+   
    // NEW CODE: Initialize $new_file_name with $original_file_name
     $new_file_name = $original_file_name; 
+   
+   
     $target_file = $target_dir . $original_file_name;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     $uploadOk = 1;
    
+   // Check if file already exists and rename if necessary
  // Check if file already exists and rename if necessary
  if (file_exists($target_file)) {
    // Generate a unique file name by appending a timestamp
@@ -69,11 +75,11 @@ if (isset($_POST['multisave'])) {
             // Save the user data and the path to the profile picture in the database
             $profile_picture_path = 'uploads/'.$new_file_name; // Save the new file name (without directory)
             
-            $userID= $con->signupUser($firstname, $lastname, $birthday, $sex, $email, $username, $password,$profile_picture_path);
+            $userID = $con->signupUser($firstname, $lastname, $birthday, $sex, $email, $username, $password, $profile_picture_path);
 
             if ($userID) {
                 // Signup successful, insert address into users_address table
-                if ($con->insertAddress($userID ,$street, $barangay, $city, $province)) {
+                if ($con->insertAddress($userID, $street, $barangay, $city, $province)) {
                     // Address insertion successful, redirect to login page
                     header('location:index.php');
                     exit; // Stop further execution
@@ -93,6 +99,8 @@ if (isset($_POST['multisave'])) {
 }
 ?>
 
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -102,26 +110,26 @@ if (isset($_POST['multisave'])) {
   <!-- Bootstrap CSS -->
   
   <link rel="stylesheet" href="css/bootstrap.css">
- 
+  <link rel="stylesheet" href="css/bootstrap.min.css">
   <!-- JQuery for Address Selector -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <title>Marga's Cake - Register Page</title>
+  <title>Form with MultiStep and Address Selector</title>
   <style>
     .form-step {
       display: none;
     }
+    
     .form-step-active {
       display: block;
     }
-    footer{
-      margin-top: 20rem;
-    }
+
+  
   </style>
 </head>
 <body>
 <?php include('user-navbar.php'); ?>
 <div class="container custom-container rounded-3 shadow my-5 p-3 px-5">
-  <h3 class="text-center mt-4">Order Form</h3>
+  <h3 class="text-center mt-4">Registration Form</h3>
   <form id="registration-form" method="post" action="" enctype="multipart/form-data" novalidate>
     <!-- Step 1 -->
     <div class="form-step form-step-active" id="step-1">
@@ -137,16 +145,16 @@ if (isset($_POST['multisave'])) {
         </div>
           <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email" required>
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Please enter a valid email.</div>
-            <div id="emailFeedback" class="invalid-feedback"></div> <!-- New feedback div -->
+            <div id="emailFeedback" class="invalid-feedback"></div>
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" class="form-control" name="password" placeholder="Enter password" required>
             <div class="valid-feedback">Looks good!</div>
-            <div class="invalid-feedback">Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one special character.</div>
+            <div class="invalid-feedback`">Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one special character.</div>
           </div>
 
           <div class="form-group">
@@ -211,6 +219,7 @@ if (isset($_POST['multisave'])) {
     </div>
     </div>
 
+
     <!-- Step 3 -->
     <div class="form-step" id="step-3">
       <div class="card mt-4">
@@ -248,15 +257,15 @@ if (isset($_POST['multisave'])) {
           </div>
           <div class="form-group">
             <label class="form-label">Street <span class="text-danger"> *</span></label>
-            <input type="text" class="form-control form-control-md" name="street" id="street-text" required>
+            <input type="text" class="form-control form-control-md" name="user_street" id="street-text" required>
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Please select your street.</div>
           </div>
         </div>
       </div>
       <button type="button" class="btn btn-secondary mt-3" onclick="prevStep()">Previous</button>
-      <a type="submit" name="multisave" class="btn btn-primary mt-3" href = sign-in.php>Confirm</a>
-      <a class="btn btn-outline-danger mt-3" href="index.php">Go Back</a>
+      <button type="submit" name="multisave" class="btn btn-primary mt-3">Sign Up</button>
+      <a class="btn btn-outline-danger mt-3" href="sign-in.php">Go Back</a>
     </div>
   </form>
 </div>
@@ -264,8 +273,8 @@ if (isset($_POST['multisave'])) {
 <script src="./bootstrap-5.3.3-dist/js/bootstrap.js"></script>
 <!-- Script for Address Selector -->
 <script src="ph-address-selector.js"></script>
-<!-- AJAX for live checking of existing usernames -->
 <script>
+  // Ajax for existing username 
 $(document).ready(function(){
     $('#username').on('input', function(){
         var username = $(this).val();
@@ -296,8 +305,11 @@ $(document).ready(function(){
 });
 
 </script>
-<!-- AJAX for live checking of existing emails -->
+
+
+<!-- Another Ajax for Email Checking -->
 <script>
+  
 $(document).ready(function(){
     $('#email').on('input', function(){
         var email = $(this).val();
@@ -309,7 +321,7 @@ $(document).ready(function(){
                 dataType: 'json',
                 success: function(response) {
                     if(response.exists) {
-                        $('#email').removeClass('is-valid').addClass('is-invalid');
+                        $('#email').removeClass('is-valid').addClass('is-invalid'); 
                         $('#emailFeedback').text('Email is already taken.');
                         $('#nextButton').prop('disabled', true); // Disable the Next button
                     } else {
@@ -317,18 +329,16 @@ $(document).ready(function(){
                         $('#emailFeedback').text('');
                         $('#nextButton').prop('disabled', false); // Enable the Next button
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error);
                 }
             });
         } else {
             $('#email').removeClass('is-valid is-invalid');
             $('#emailFeedback').text('');
-            $('#nextButton').prop('disabled', false); // Enable the Next button if email is empty
+            $('#nextButton').prop('disabled', false); // Enable the Next button if username is empty
         }
     });
 });
+
 </script>
 
 <!-- Script for Form Validation -->
@@ -338,6 +348,7 @@ $(document).ready(function(){
       const birthdayInput = document.getElementById("birthday");
       const steps = document.querySelectorAll(".form-step");
       let currentStep = 0;
+
 
   
       // Set the max attribute of the birthday input to today's date
@@ -452,17 +463,12 @@ function validateStep(step) {
         }
     });
 
+
       
     
 });</script>
- <!-- JAVASCRIPT FILES -->
- <script src="js/jquery.min.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
-        <script src="js/Headroom.js"></script>
-        <script src="js/jQuery.headroom.js"></script>
-        <script src="js/slick.min.js"></script>
-        <script src="js/custom.js"></script>
-        <footer class="site-footer">
+
+<footer class="site-footer">
             <div class="container">
                 <div class="row">
 
@@ -506,7 +512,13 @@ function validateStep(step) {
             </div>
         </footer>
 
-       
+        <!-- JAVASCRIPT FILES -->
+        <script src="js/jquery.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="js/Headroom.js"></script>
+        <script src="js/jQuery.headroom.js"></script>
+        <script src="js/slick.min.js"></script>
+        <script src="js/custom.js"></script>
 
   
   </body>

@@ -1,14 +1,18 @@
 <?php
-
-
-// Check if the user is logged in and is an admin
 session_start();
+$current_page = basename($_SERVER['PHP_SELF']);
+require_once('classes/database.php');
+$con = new Database();
 
-// Check if the user is logged in and is a regular user
-if (!isset($_SESSION['User_Id']) || !isset($_SESSION['account_type']) || $_SESSION['account_type'] != 1) {
-    // Redirect to login page if not a regular user
-    header('Location: sign-in.php');
-    exit();  // Ensure script stops after redirection
+if (isset($_SESSION['User_Id'])) {
+    $id = $_SESSION['User_Id'];
+    $data = $con->viewdata($id);
+
+    $profilePicture = $data['user_profile_picture'] ?? 'path/to/default/profile_picture.jpg';
+    $username = $_SESSION['username'];
+} else {
+    $profilePicture = 'path/to/default/profile_picture.jpg';
+    $username = 'Guest';
 }
 ?>
 
@@ -21,7 +25,7 @@ if (!isset($_SESSION['User_Id']) || !isset($_SESSION['account_type']) || $_SESSI
     <meta name="description" content="Chameleon Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
     <meta name="keywords" content="admin template, Chameleon admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
     <meta name="author" content="ThemeSelect">
-    <title>Dashboard - Chameleon Admin - Modern Bootstrap 4 WebApp & Dashboard HTML Template + UI Kit</title>
+    <title>\Marga's Cake</title>
     <link rel="apple-touch-icon" href="theme-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="theme-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
@@ -73,10 +77,10 @@ if (!isset($_SESSION['User_Id']) || !isset($_SESSION['account_type']) || $_SESSI
                   <div class="arrow_box_right"><a class="dropdown-item" href="#"><i class="ft-book"></i> Read Mail</a><a class="dropdown-item" href="#"><i class="ft-bookmark"></i> Read Later</a><a class="dropdown-item" href="#"><i class="ft-check-square"></i> Mark all Read       </a></div>
                 </div>
               </li>
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">             <span class="avatar avatar-online"><img src="theme-assets/images/portrait/small/avatar-s-19.png" alt="avatar"><i></i></span></a>
+              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">             <span class="avatar avatar-online"><img src="images\header\images.png" alt="avatar"><i></i></span></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                  <div class="arrow_box_right"><a class="dropdown-item" href="#"><span class="avatar avatar-online"><img src="theme-assets/images/portrait/small/avatar-s-19.png" alt="avatar"><span class="user-name text-bold-700 ml-1">John Doe</span></span></a>
-                    <div class="dropdown-divider"></div><a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="#"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a>
+                  <div class="arrow_box_right"><a class="dropdown-item" href="#"><span class="avatar avatar-online"> <img src="images\header\images.png"alt="avatar"><span class="user-name text-bold-700 ml-1"></span>ADMIN</span></a>
+                    <div class="dropdown-divider"><</div><a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="#"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a>
                     <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.php"><i class="ft-power"></i> Logout</a>
                   </div>
                 </div>
