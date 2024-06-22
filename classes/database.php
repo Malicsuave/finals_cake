@@ -43,24 +43,15 @@ function check($username, $password) {
     
 
 
- function signupUser($User_Id, $username,$email,$password, $firstname, $lastname, $birthday, $sex, $profilePicture){
+ function signupUser( $username,$email,$password, $firstname, $lastname, $birthday, $sex, $profilePicture){
     $con = $this->opencon();
-
-
- 
 
     $query=$con->prepare("SELECT username FROM signup WHERE username =?");
     $query->execute([$username]);
-    $existingUser= $query->fetch();
-    
+    $existingUser= $query->fetch();;
 
-
-     if($existingUser){
-    return false;
- }
-
-  $con->prepare("INSERT INTO signup(username,password,firstname,lastname,birthday,sex)
- VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute([$username,$password,$firstname,$lastname,$birthday,$sex,$profilePicture]);
+  $con->prepare("INSERT INTO signup (username,password,firstname,lastname,birthday,sex,email,user_profile_picture)
+ VALUES (?, ?, ?, ?, ?, ?, ?, ?)")->execute([$username,$password,$firstname,$lastname,$birthday,$sex,$email,$profilePicture]);
             return $con->lastInsertId();
  }
 
@@ -72,12 +63,21 @@ function check($username, $password) {
 //     return $con->lastInsertId(); // Ensure this returns the correct ID
 // }
 
-function insertAddress($street, $barangay, $city, $province, $user_add_id)
+function insertAddress($User_Id, $street, $barangay, $city, $province)
     {
+        try
+        {
         $con = $this->opencon();
-        return $con->prepare("INSERT INTO user_address (street, barangay, city, province, registered_Id) VALUES (?,?,?,?,?)")->execute([$street, $barangay,  $city, $province, $user_add_id]);
-          
+        $con->beginTransaction();
+        $con->prepare("INSERT INTO user_address (street, barangay, city, province, registered_Id) VALUES (?,?,?,?,?)")->execute([$User_Id,$street, $barangay,  $city, $province]);
+        $con->commit();
+        return true;
     }
+    catch (PDOException $e) {
+        $con->rollBack();
+        return false;
+    }  
+}
 
     function prepare($full_name, $email, $subject, $message)
 {
