@@ -77,11 +77,6 @@ if (isset($_SESSION['User_Id'])) {
                 <li class="nav-item <?php echo ($current_page == 'contact.php') ? 'active' : ''; ?>">
                     <a class="nav-link" href="contact.php">Contact</a>
                     </li>
-                    <?php if (isset($_SESSION['User_Id']) && $account_type == 1): ?>
-                        <li class="nav-item <?php echo ($current_page == 'admin.php') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="admin.php">Admin</a>
-                        </li>
-                    <?php endif; ?>
             </ul>
 
             <div class="d-none d-lg-block">

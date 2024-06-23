@@ -4,6 +4,8 @@ $current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
 $con = new Database();
 
+$products = $con->viewProducts();
+
 if (isset($_SESSION['User_Id'])) {
     $id = $_SESSION['User_Id'];
     $data = $con->viewdata($id);
@@ -178,7 +180,7 @@ https://www.tooplate.com/view/2127-little-fashion
                                     <div class="row">
                                         <div class="col-lg-7 col-12">
                                             <div class="ratio ratio-16x9">
-                                                <iframe src="https://www.youtube-nocookie.com/embed/f_7JqPDWhfw?controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                <iframe src="https://www.youtube.com/embed/xVWwDc5aNDM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                             </div>
                                         </div>
 
@@ -287,81 +289,41 @@ https://www.tooplate.com/view/2127-little-fashion
                             <h2 class="mb-5">Featured Products</h2>
                         </div>
 
-                        <div class="col-lg-4 col-12 mb-3">
-                            <div class="product-thumb">
-                                <a href="product-detail.php">
-                                    <img src="photos/1.png" class="img-fluid product-image" alt="">
-                                </a>
+                        <?php foreach ($products as $product): ?>
+                <div class="col-lg-4 col-12 mb-3">
+                    <div class="product-thumb">
+                        <a href="product-detail.php?id=<?php echo $product['id']; ?>">
+                            <img src="<?php echo isset($product['productImage']) ? $product['productImage'] : 'default_image.jpg'; ?>" class="img-fluid product-image" alt="">
+                        </a>
 
-                                <div class="product-top d-flex">
-                                    <span class="product-alert me-auto">New Arrival</span>
+                        <div class="product-top d-flex">
+                            <?php if (isset($product['is_new']) && $product['is_new']): ?>
+                                <span class="product-alert me-auto">New Arrival</span>
+                            <?php endif; ?>
 
-                                    <a href="#" class="bi-heart-fill product-icon"></a>
-                                </div>
-
-                                <div class="product-info d-flex">
-                                    <div>
-                                        <h5 class="product-title mb-0">
-                                            <a href="product-detail.php" class="product-title-link">Tree pot</a>
-                                        </h5>
-
-                                        <p class="product-p">Original package design from house</p>
-                                    </div>
-
-                                    <small class="product-price text-muted ms-auto mt-auto mb-5">$25</small>
-                                </div>
-                            </div>
+                            <a href="#" class="bi-heart-fill product-icon"></a>
                         </div>
 
-                        <div class="col-lg-4 col-12 mb-3">
-                            <div class="product-thumb">
-                                <a href="product-detail.php">
-                                    <img src="photos/3.png" class="img-fluid product-image" alt="">
-                                </a>
+                        <div class="product-info d-flex">
+                            <div>
+                                <h5 class="product-title mb-0">
+                                    <a href="product-detail.php?id=<?php echo $product['id']; ?>" class="product-title-link">
+                                        <?php echo isset($product['productName']) ? $product['productName'] : 'Unnamed Product'; ?>
+                                    </a>
+                                </h5>
 
-                                <div class="product-top d-flex">
-                                    <span class="product-alert">Low Price</span>
-
-                                    <a href="#" class="bi-heart-fill product-icon ms-auto"></a>
-                                </div>
-
-                                <div class="product-info d-flex">
-                                    <div>
-                                        <h5 class="product-title mb-0">
-                                            <a href="product-detail.php" class="product-title-link">Fashion Set</a>
-                                        </h5>
-
-                                        <p class="product-p">Costume Package</p>
-                                    </div>
-
-                                    <small class="product-price text-muted ms-auto mt-auto mb-5">$35</small>
-                                </div>
+                                <p class="product-p">
+                                    <?php echo isset($product['productTheme']) ? $product['productTheme'] : 'No description available.'; ?>
+                                </p>
                             </div>
+
+                            <small class="product-price text-muted ms-auto">
+                                $<?php echo isset($product['productPrice']) ? $product['productPrice'] : 'N/A'; ?>
+                            </small>
                         </div>
-
-                        <div class="col-lg-4 col-12">
-                            <div class="product-thumb">
-                                <a href="product-detail.php">
-                                    <img src="photos/2.png" class="img-fluid product-image" alt="">
-                                </a>
-
-                                <div class="product-top d-flex">
-                                    <a href="#" class="bi-heart-fill product-icon ms-auto"></a>
-                                </div>
-
-                                <div class="product-info d-flex">
-                                    <div>
-                                        <h5 class="product-title mb-0">
-                                            <a href="product-detail.php" class="product-title-link">Juice Drinks</a>
-                                        </h5>
-
-                                        <p class="product-p">Nature made another world</p>
-                                    </div>
-
-                                    <small class="product-price text-muted ms-auto mt-auto mb-5">$45</small>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
 
                         <div class="col-12 text-center">
                             <a href="products.php" class="view-all">View All Products</a>

@@ -71,7 +71,54 @@ $products = $con->getProducts(); // Assuming this method retrieves all products 
         </div>
     </header>
 
+<<<<<<< HEAD
     
+=======
+    <section class="products section-padding">
+        <div class="container">
+            <div class="row">
+
+            <?php foreach ($products as $product): ?>
+                <div class="col-lg-4 col-12 mb-3">
+                    <div class="product-thumb">
+                        <a href="product-detail.php?id=<?php echo $product['id']; ?>">
+                            <img src="<?php echo isset($product['productImage']) ? $product['productImage'] : 'default_image.jpg'; ?>" class="img-fluid product-image" alt="">
+                        </a>
+
+                        <div class="product-top d-flex">
+                            <?php if (isset($product['is_new']) && $product['is_new']): ?>
+                                <span class="product-alert me-auto">New Arrival</span>
+                            <?php endif; ?>
+
+                            <a href="#" class="bi-heart-fill product-icon"></a>
+                        </div>
+
+                        <div class="product-info d-flex">
+                            <div>
+                                <h5 class="product-title mb-0">
+                                    <a href="product-detail.php?id=<?php echo $product['id']; ?>" class="product-title-link">
+                                        <?php echo isset($product['productName']) ? $product['productName'] : 'Unnamed Product'; ?>
+                                    </a>
+                                </h5>
+
+                                <p class="product-p">
+                                    <?php echo isset($product['productTheme']) ? $product['productTheme'] : 'No description available.'; ?>
+                                </p>
+                            </div>
+
+                            <small class="product-price text-muted ms-auto">
+                                $<?php echo isset($product['productPrice']) ? $product['productPrice'] : 'N/A'; ?>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+
+            </div>
+        </div>
+    </section>
+</main>
+>>>>>>> 64b2a1c4e498d5fef483c637b032767d329f529f
 
 <footer class="site-footer">
     <div class="container">
