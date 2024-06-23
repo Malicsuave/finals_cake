@@ -1,9 +1,9 @@
 <?php
 
-class database{
+class database {
     private $conn;
 
-    function opencon(){
+    function opencon() {
         return new PDO('mysql:host=localhost; dbname=margacake', 'root', '');
     }
 
@@ -18,12 +18,12 @@ class database{
         return false;
     }
 
-    function signup($username, $password, $firstname, $lastname, $birthday, $sex){
+    function signup($username, $password, $firstname, $lastname, $birthday, $sex) {
         $con = $this->opencon();
         $query = $con->prepare("SELECT username FROM users WHERE username = ?");
         $query->execute([$username]);
         $existingUser = $query->fetch();
-        if($existingUser){
+        if($existingUser) {
             return false;
         }
         return $con->prepare("INSERT INTO users(username, password, firstname, lastname, birthday, sex)
@@ -31,20 +31,20 @@ class database{
             ->execute([$username, $password, $firstname, $lastname, $birthday, $sex]);
     }
 
-    function signupUser($firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture)
-    {
+    function signupUser($firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture) {
         $con = $this->opencon();
-        $con->prepare("INSERT INTO users (firstname, lastname, birthday, sex, user_email, username, password, user_profile_picture) VALUES (?,?,?,?,?,?,?,?)")->execute([$firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture]);
+        $con->prepare("INSERT INTO users (firstname, lastname, birthday, sex, user_email, username, password, user_profile_picture) VALUES (?,?,?,?,?,?,?,?)")
+            ->execute([$firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture]);
         return $con->lastInsertId();
     }
 
-    function insertAddress($User_Id, $street, $barangay, $city, $province)
-    {
+    function insertAddress($User_Id, $street, $barangay, $city, $province) {
         $con = $this->opencon();
-        return $con->prepare("INSERT INTO user_address (User_Id, street, barangay, city, province) VALUES (?,?,?,?,?)")->execute([$User_Id, $street, $barangay,  $city, $province]);
+        return $con->prepare("INSERT INTO user_address (User_Id, street, barangay, city, province) VALUES (?,?,?,?,?)")
+            ->execute([$User_Id, $street, $barangay,  $city, $province]);
     }
 
-    function view(){
+    function view() {
         $con = $this->opencon();
         return $con->query("SELECT
             users.User_Id,
@@ -63,7 +63,7 @@ class database{
         JOIN user_address ON users.User_Id = user_address.User_Id")->fetchAll();
     }
 
-    function delete($id){
+    function delete($id) {
         try {
             $con = $this->opencon();
             $con->beginTransaction();
@@ -72,14 +72,14 @@ class database{
             $query2 = $con->prepare("DELETE FROM users WHERE User_Id = ?");
             $query2->execute([$id]);
             $con->commit();
-            return true; //Deletion successful
+            return true; // Deletion successful
         } catch (PDOException $e) {
             $con->rollBack();
             return false;
         }
     }
 
-    function viewdata($id){
+    function viewdata($id) {
         try {
             $con = $this->opencon();
             $query = $con->prepare("SELECT
@@ -103,7 +103,7 @@ class database{
         }
     }
 
-    function updateUser($User_Id, $username,$password,$firstname, $lastname, $birthday, $sex) {
+    function updateUser($User_Id, $username, $password, $firstname, $lastname, $birthday, $sex) {
         try { 
             $con = $this->opencon();
             $con->beginTransaction();
@@ -121,8 +121,8 @@ class database{
         try { 
             $con = $this->opencon();
             $con->beginTransaction();
-            $query = $con->prepare("UPDATE user_address SET street=?, barangay=?, city=?, province=?  WHERE User_Id=?");
-            $query->execute([$street,$barangay,$city,$province, $User_Id]);
+            $query = $con->prepare("UPDATE user_address SET street=?, barangay=?, city=?, province=? WHERE User_Id=?");
+            $query->execute([$street, $barangay, $city, $province, $User_Id]);
             $con->commit();
             return true;
         } catch (PDOException $e) {
@@ -142,7 +142,7 @@ class database{
         return false;
     }
 
-    function updatePassword($userId, $hashedPassword){
+    function updatePassword($userId, $hashedPassword) {
         try {
             $con = $this->opencon();
             $con->beginTransaction();
@@ -170,19 +170,68 @@ class database{
         }
     }
 
-    // New method to insert product
-    function insertProduct($productName, $productDescription, $productPrice, $imagePath) {
-        global $con;
-        
-        $stmt = $con->prepare("INSERT INTO products (product_name, product_description	, product_price, product_image) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssds", $productName, $productDescription, $productPrice, $imagePath);
-        
-        if ($stmt->execute()) {
+    // Cart-related methods
+
+    function getCartItems($user_id) {
+        try {
+            $con = $this->opencon();
+            $query = $con->prepare("SELECT c.Carts_Id, c.quantity, p.product_name, p.product_price, p.product_image 
+                                    FROM carts c 
+                                    JOIN products p ON c.id = p.id 
+                                    WHERE c.User_Id = ?");
+            $query->execute([$user_id]);
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return [];
+        }
+    }
+
+    function updateCartItemQuantity($cart_id, $quantity, $user_id) {
+        try {
+            $con = $this->opencon();
+            $query = $con->prepare("UPDATE carts SET quantity = ? WHERE Carts_Id = ? AND User_Id = ?");
+            $query->execute([$quantity, $cart_id, $user_id]);
             return true;
-        } else {
+        } catch (PDOException $e) {
             return false;
         }
     }
+
+    function removeCartItem($cart_id, $user_id) {
+        try {
+            $con = $this->opencon();
+            $query = $con->prepare("DELETE FROM carts WHERE Carts_Id = ? AND User_Id = ?");
+            $query->execute([$cart_id, $user_id]);
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    function clearCart($user_id) {
+        try {
+            $con = $this->opencon();
+            $query = $con->prepare("DELETE FROM carts WHERE User_Id = ?");
+            $query->execute([$user_id]);
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
+    // Product-related methods
+
+    function insertProduct($productName, $productDescription, $productPrice, $imagePath) {
+        try {
+            $con = $this->opencon();
+            $query = $con->prepare("INSERT INTO products (product_name, product_description, product_price, product_image) VALUES (?,?,?,?)");
+            $query->execute([$productName, $productDescription, $productPrice, $imagePath]);
+            return true;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
+
     function viewProducts() {
         try {
             $con = $this->opencon();
@@ -190,6 +239,27 @@ class database{
             return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             return []; // Return an empty array if there's an error
+        }
+    }
+    public function getProductDetails($product_id) {
+        try {
+            $con = $this->opencon();
+            $query = $con->prepare("SELECT * FROM products WHERE id = ?");
+            $query->execute([$product_id]);
+            return $query->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Handle errors gracefully
+            return null; // Return null or handle error as needed
+        }
+    }
+    function addToCart($user_id, $product_id, $quantity) {
+        try {
+            $con = $this->opencon();
+            $query = $con->prepare("INSERT INTO carts (User_Id, id, quantity) VALUES (?, ?, ?)");
+            $query->execute([$user_id, $product_id, $quantity]);
+            return true;
+        } catch (PDOException $e) {
+            return false; // Handle insertion error
         }
     }
 }
