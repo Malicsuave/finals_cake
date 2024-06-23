@@ -178,7 +178,7 @@ https://www.tooplate.com/view/2127-little-fashion
                                     <div class="row">
                                         <div class="col-lg-7 col-12">
                                             <div class="ratio ratio-16x9">
-                                                <iframe src="https://www.youtube-nocookie.com/embed/f_7JqPDWhfw?controls=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                                <iframe src="https://www.youtube.com/embed/xVWwDc5aNDM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                                             </div>
                                         </div>
 
