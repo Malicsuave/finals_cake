@@ -14,6 +14,11 @@ if (isset($_SESSION['User_Id'])) {
     $profilePicture = 'path/to/default/profile_picture.jpg';
     $username = 'Guest';
 }
+
+$messages = $con->getAllMessages();
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -22,10 +27,10 @@ if (isset($_SESSION['User_Id'])) {
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
-    <meta name="description" content="Chameleon Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
-    <meta name="keywords" content="admin template, Chameleon admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
+    <meta name="description" content="Margas's Cake Admin is a modern Bootstrap 4 webapp &amp; admin dashboard html template with a large number of components, elegant design, clean and organized code.">
+    <meta name="keywords" content="admin template, Margas's Cake admin template, dashboard template, gradient admin template, responsive admin template, webapp, eCommerce dashboard, analytic dashboard">
     <meta name="author" content="ThemeSelect">
-    <title>\Marga's Cake</title>
+    <title>Marga's Cake</title>
     <link rel="apple-touch-icon" href="theme-assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="theme-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Muli:300,300i,400,400i,600,600i,700,700i%7CComfortaa:300,400,700" rel="stylesheet">
@@ -34,9 +39,9 @@ if (isset($_SESSION['User_Id'])) {
     <link rel="stylesheet" type="text/css" href="theme-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="theme-assets/vendors/css/charts/chartist.css">
     <!-- END VENDOR CSS-->
-    <!-- BEGIN CHAMELEON  CSS-->
+    <!-- BEGIN Margas's Cake  CSS-->
     <link rel="stylesheet" type="text/css" href="theme-assets/css/app-lite.css">
-    <!-- END CHAMELEON  CSS-->
+    <!-- END Margas's Cake  CSS-->
     <!-- BEGIN Page Level CSS-->
     <link rel="stylesheet" type="text/css" href="theme-assets/css/core/menu/menu-types/vertical-menu.css">
     <link rel="stylesheet" type="text/css" href="theme-assets/css/core/colors/palette-gradient.css">
@@ -77,14 +82,29 @@ if (isset($_SESSION['User_Id'])) {
                   <div class="arrow_box_right"><a class="dropdown-item" href="#"><i class="ft-book"></i> Read Mail</a><a class="dropdown-item" href="#"><i class="ft-bookmark"></i> Read Later</a><a class="dropdown-item" href="#"><i class="ft-check-square"></i> Mark all Read       </a></div>
                 </div>
               </li>
-              <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">             <span class="avatar avatar-online"><img src="images\header\images.png" alt="avatar"><i></i></span></a>
-                <div class="dropdown-menu dropdown-menu-right">
-                  <div class="arrow_box_right"><a class="dropdown-item" href="#"><span class="avatar avatar-online"> <img src="images\header\images.png"alt="avatar"><span class="user-name text-bold-700 ml-1"></span>ADMIN</span></a>
-                    <div class="dropdown-divider"><</div><a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a><a class="dropdown-item" href="#"><i class="ft-mail"></i> My Inbox</a><a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a><a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a>
-                    <div class="dropdown-divider"></div><a class="dropdown-item" href="logout.php"><i class="ft-power"></i> Logout</a>
-                  </div>
-                </div>
-              </li>
+              <li class="dropdown dropdown-user nav-item">
+    <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
+        <span class="avatar avatar-online"><img src="<?php echo $data['user_profile_picture'];; ?>" alt="avatar"></span>
+    </a>
+    <div class="dropdown-menu dropdown-menu-right">
+        <div class="arrow_box_right">
+            <a class="dropdown-item" href="#">
+                <span class="avatar avatar-online">
+                    <img src="<?php echo $data['user_profile_picture']; ?>" alt="avatar">
+                    <span class="user-name text-bold-700 ml-1"><?php echo $username; ?></span>
+                    <span></span>
+                </span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
+            <a class="dropdown-item" href="inbox.php"><i class="ft-mail"></i> My Inbox</a>
+            <a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a>
+            <a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="logout.php"><i class="ft-power"></i> Logout</a>
+        </div>
+    </div>
+</li>
             </ul>
           </div>
         </div>
@@ -97,33 +117,27 @@ if (isset($_SESSION['User_Id'])) {
     <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
       <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">       
-          <li class="nav-item mr-auto"><a class="navbar-brand" href="admin.php"><img class="brand-logo" alt="Chameleon admin logo" src="theme-assets/images/logo/logo.png"/>
+          <li class="nav-item mr-auto"><a class="navbar-brand" href="admin.php"><img class="brand-logo" alt="Margas's Cake admin logo" src="theme-assets/images/logo/logo.png"/>
               <h3 class="brand-text">Marga's Cake</h3></a></li>
           <li class="nav-item d-md-none"><a class="nav-link close-navbar"><i class="ft-x"></i></a></li>
         </ul>
       </div>
       <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-          <li class="active"><a href="admin.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+          <li class="active "><a href="admin.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
           </li>
           <li class=" nav-item"><a href="charts.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Charts</span></a>
           </li>
-          <li class=" nav-item"><a href="icons.php"><i class="ft-droplet"></i><span class="menu-title" data-i18n="">Icons</span></a>
+          <li class="nav-item"><a href="icons.php"><i class="ft-box"></i><span class="menu-title" data-i18n="">Messages</span></a>
           </li>
           <li class=" nav-item"><a href="cards.php"><i class="ft-layers"></i><span class="menu-title" data-i18n="">Cards</span></a>
           </li>
           <li class=" nav-item"><a href="buttons.php"><i class="ft-box"></i><span class="menu-title" data-i18n="">Buttons</span></a>
           </li>
-          <li class=" nav-item"><a href="typography.php"><i class="ft-bold"></i><span class="menu-title" data-i18n="">Typography</span></a>
-          </li>
-          <li class=" nav-item"><a href="tables.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Tables</span></a>
-          </li>
-          <li class=" nav-item"><a href="form-elements.php"><i class="ft-layout"></i><span class="menu-title" data-i18n="">Form Elements</span></a>
-          </li>
-          <li class=" nav-item"><a href="https://themeselection.com/demo/chameleon-admin-template/documentation"><i class="ft-book"></i><span class="menu-title" data-i18n="">Documentation</span></a>
-          </li>
+          
         </ul>
       </div><a class="btn btn-danger btn-block btn-glow btn-upgrade-pro mx-1" href="index.php" target="_blank">Marga's Cake</a>
+      <div class="navigation-background"></div>
       <div class="navigation-background"></div>
     </div>
 
@@ -434,7 +448,7 @@ if (isset($_SESSION['User_Id'])) {
         <ul class="list-inline float-md-right d-block d-md-inline-blockd-none d-lg-block mb-0">
           <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank"> More themes</a></li>
           <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Support</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/chameleon-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> Purchase</a></li>
+          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> Purchase</a></li>
         </ul>
       </div>
     </footer>
@@ -445,10 +459,10 @@ if (isset($_SESSION['User_Id'])) {
     <!-- BEGIN PAGE VENDOR JS-->
     <script src="theme-assets/vendors/js/charts/chartist.min.js" type="text/javascript"></script>
     <!-- END PAGE VENDOR JS-->
-    <!-- BEGIN CHAMELEON  JS-->
+    <!-- BEGIN Margas's Cake  JS-->
     <script src="theme-assets/js/core/app-menu-lite.js" type="text/javascript"></script>
     <script src="theme-assets/js/core/app-lite.js" type="text/javascript"></script>
-    <!-- END CHAMELEON  JS-->
+    <!-- END Margas's Cake  JS-->
     <!-- BEGIN PAGE LEVEL JS-->
     <script src="theme-assets/js/scripts/pages/dashboard-lite.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL JS-->

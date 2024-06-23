@@ -159,6 +159,21 @@ section{
    font-size: 2rem;
 }
 
+.app-content {
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+
+.content-wrapper {
+   flex: 1;
+}
+
+footer {
+   position: absolute;
+   bottom: 0;
+   width: 100%;
+ }
 #menu-btn{
    margin-left: 2rem;
    font-size: 3rem;

@@ -1,11 +1,43 @@
 <?php
 
 class database{
-    private $conn;
-    function opencon(){
-        return new PDO('mysql:host=localhost; dbname=margacake', 'root', '');
+   
+    function opencon() {
+        try {
+            $con = new PDO('mysql:host=localhost; dbname=margacake', 'root', '');
+            $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $con;
+        } catch (PDOException $e) {
+            error_log('Connection Error: ' . $e->getMessage());
+            echo 'Connection Error: ' . $e->getMessage();
+            exit();
+        }
     }
 
+    function insertMessage($name, $email, $subject, $message) {
+        try {
+            $con = $this->opencon();
+            $stmt = $con->prepare("INSERT INTO messages (full_name, email, subject, concern) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $email, $subject, $message]);
+            return true; // Insertion successful
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log("Database Insertion Error: " . $e->getMessage());
+            echo "Database Insertion Error: " . $e->getMessage();
+            return false; // Insertion failed
+        }
+    }
+
+function getAllMessages() {
+    try {
+        $con = $this->opencon();
+        $stmt = $con->query("SELECT * FROM messages ORDER BY created_at DESC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Database Error: " . $e->getMessage());
+        return []; // Return an empty array or handle the error as needed
+    }
+}
 
     // function check($username, $password){
     //     $con = $this->opencon();
@@ -32,6 +64,8 @@ function check($username, $password) {
         // If no user is found or password is incorrect, return false
         return false;
     }
+
+    
 
 function signup($username, $password, $firstname, $lastname, $birthday, $sex){
         $con = $this->opencon();

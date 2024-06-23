@@ -1,26 +1,30 @@
-
-
 <?php
 session_start();
-$current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
+
+// Instantiate Database class
 $con = new Database();
 
-if (isset($_SESSION['User_Id'])) {
-    $id = $_SESSION['User_Id'];
-    $data = $con->viewdata($id);
+// Handle form submission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_message'])) {
+    // Sanitize and validate input
+    $name = htmlspecialchars(trim($_POST['full_name']));
+    $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+    $subject = htmlspecialchars(trim($_POST['subject']));
+    $message = htmlspecialchars(trim($_POST['message']));
 
-    $profilePicture = $data['user_profile_picture'] ?? 'path/to/default/profile_picture.jpg';
-    $username = $_SESSION['username'];
-} else {
-    $profilePicture = 'path/to/default/profile_picture.jpg';
-    $username = 'Guest';
+    // Insert data into database using Database class method
+    if ($con->insertMessage($name, $email, $subject, $message)) {
+        // Redirect to a thank you page or display a success message
+        header("Location: contact.php?success=1");
+        exit();
+    } else {
+        // Handle database insertion error
+        $error_message = "Error: Failed to insert message into database.";
+    }
 }
-
-
-
-
 ?>
+
 
 
 
@@ -90,37 +94,29 @@ https://www.tooplate.com/view/2127-little-fashion
                         <div class="col-lg-6 col-12">
                             <h2 class="mb-4">Let's <span>begin</span></h2>
 
-                            <form class="contact-form me-lg-5 pe-lg-3" role="form">
+                            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" class="contact-form me-lg-5 pe-lg-3">
+    <div class="form-floating">
+        <input type="text" name="full_name" id="name" class="form-control" placeholder="Full name" required>
+        <label for="name">Full name</label>
+    </div>
 
-                                <div class="form-floating">
-                                    <input type="text" name="name" id="name" class="form-control" placeholder="Full name" required>
+    <div class="form-floating my-4">
+        <input type="email" name="email" id="email" class="form-control" placeholder="Email address" required>
+        <label for="email">Email address</label>
+    </div>
+    
+    <div class="form-floating my-4">
+        <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject" required>
+        <label for="subject">Subject</label>
+    </div>
 
-                                    <label for="name">Full name</label>
-                                </div>
+    <div class="form-floating mb-4">
+        <textarea id="message" name="message" class="form-control" placeholder="Leave a comment here" required style="height: 160px"></textarea>
+        <label for="message">Tell us about your concern</label>
+    </div>
 
-                                <div class="form-floating my-4">
-                                    <input type="email" name="email" id="email" pattern="[^ @]*@[^ @]*" class="form-control" placeholder="Email address" required>
-
-                                    <label for="email">Email address</label>
-                                </div>
-                                
-                                <div class="form-floating my-4">
-                                    <input type="subject" name="subject" id="subject"class="form-control" placeholder="Subject" required>
-
-                                    <label for="subject">Subject</label>
-                                </div>
-
-                                <div class="form-floating mb-4">
-                                    <textarea id="message" name="message" class="form-control" placeholder="Leave a comment here" required style="height: 160px"></textarea>
-
-                                    <label for="message">Tell us about your concern</label>
-                                </div>
-
-                                <div class="col-lg-5 col-6">
-                                    <button type="submit" name="message" class="form-control">Send</button>
-                                   
-                                </div>
-                            </form>
+    <button type="submit" name="submit_message" class="form-control">Send</button>
+</form>
                         </div>
 
                         <div class="col-lg-6 col-12 mt-5 ms-auto">
