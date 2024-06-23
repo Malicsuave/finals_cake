@@ -437,6 +437,36 @@ $messages = $con->getAllMessages();
     </div>
 </div>
 <!--/ Statistics -->
+<!-- Insert Product Form -->
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Insert New Product</h4>
+            </div>
+            <div class="card-content">
+                <div class="card-body">
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" enctype="multipart/form-data">
+        <label for="productName">Product Name:</label><br>
+        <input type="text" id="productName" name="productName" required><br><br>
+        
+        <label for="productDescription">Product Description:</label><br>
+        <textarea id="productDescription" name="productDescription" rows="4" cols="50" required></textarea><br><br>
+        
+        <label for="productPrice">Product Price:</label><br>
+        <input type="number" id="productPrice" name="productPrice" step="0.01" required><br><br>
+        
+        <label for="productImage">Product Image:</label><br>
+        <input type="file" id="productImage" name="productImage" accept="image/*" required><br><br>
+        
+        <button type="submit" name="submit">Upload Product</button>
+    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Insert Product Form -->
         </div>
       </div>
     </div>
@@ -468,3 +498,66 @@ $messages = $con->getAllMessages();
     <!-- END PAGE LEVEL JS-->
   </body>
 </html>
+<?php
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Sanitize inputs
+    $productName = $_POST['product_name'];
+    $productDescription = $_POST['product_description'];
+    $productPrice = $_POST['product_price'];
+    
+    // Process image upload
+    $targetDir = "uploads/";  // Directory where images will be stored
+    $targetFile = $targetDir . basename($_FILES["productImage"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+    
+    // Check if image file is a actual image or fake image
+    $check = getimagesize($_FILES["productImage"]["tmp_name"]);
+    if($check === false) {
+        $uploadOk = 0;
+        echo "File is not an image.";
+    }
+    
+    // Check if file already exists
+    if (file_exists($targetFile)) {
+        echo "Sorry, file already exists.";
+        $uploadOk = 0;
+    }
+    
+    // Check file size
+    if ($_FILES["productImage"]["size"] > 500000) {
+        echo "Sorry, your file is too large.";
+        $uploadOk = 0;
+    }
+    
+    // Allow certain file formats
+    $allowedFormats = ["jpg", "jpeg", "png", "gif"];
+    if (!in_array($imageFileType, $allowedFormats)) {
+        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $uploadOk = 0;
+    }
+    
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        echo "Sorry, your file was not uploaded.";
+    } else {
+        // Try to upload file
+        if (move_uploaded_file($_FILES["productImage"]["tmp_name"], $targetFile)) {
+            // File uploaded successfully, now insert into database
+            $imagePath = $targetFile;  // Store this path in the database
+            
+            // Insert into database using Database class method
+            $insertResult = $con->insertProduct($productName, $productDescription, $productPrice, $imagePath);
+            
+            if ($insertResult) {
+                echo "Product inserted successfully!";
+            } else {
+                echo "Error inserting product.";
+            }
+        } else {
+            echo "Sorry, there was an error uploading your file.";
+        }
+    }
+}
+?>

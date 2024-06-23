@@ -88,6 +88,33 @@ VALUES (?, ?, ?, ?, ?, ?)")
            
 }
 
+
+ function insertProduct($productName, $productPrice, $productStock, $productTheme, $productImage) {
+    try {
+        $con = $this->opencon();
+        $stmt = $con->prepare("INSERT INTO products (productName, productPrice, productTheme, productImage,productStock) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$productName, $productPrice, $productStock, $productTheme, $productImage]);
+        return true;
+    } catch (PDOException $e) {
+        error_log("Database Insertion Error: " . $e->getMessage());
+        echo "Database Insertion Error: " . $e->getMessage();
+        return false;
+    }
+}
+
+ function getProducts() {
+    try {
+        $con = $this->opencon();
+        $stmt = $con->prepare("SELECT * FROM products");
+        $stmt->execute();
+        $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $products;
+    } catch (PDOException $e) {
+        error_log("Database Retrieval Error: " . $e->getMessage());
+        echo "Database Retrieval Error: " . $e->getMessage();
+        return false;
+    }
+}
 // function signupUser($username, $password, $firstname, $lastname, $birthday, $sex){
 //     $con = $this->opencon();
 
