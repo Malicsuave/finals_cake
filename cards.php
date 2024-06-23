@@ -32,10 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $productImage = $uploadFile;
 
         // Insert into database
-        $con->addProduct($productName, $productPrice, $productTheme, $productImage, $productStock);
+        $con->insertProduct($productName, $productPrice, $productTheme, $productImage, $productStock);
 
         // Redirect to admin_products.php after insertion
-        header('Location: admin_products.php');
+        header('Location: cards.php');
         exit();
     } else {
         // File upload failed
@@ -185,7 +185,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="card mb-4">
 	<h5 class="card-header">Add New Product</h5>
 	<div class="card-body">
-		<form action="add_product.php" method="POST" enctype="multipart/form-data">
+		<form action="cards.php" method="POST" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="productName">Product Name</label>
 				<input type="text" class="form-control" id="productName" name="productName" required>
@@ -218,27 +218,68 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<table class="table table-bordered">
 			<thead>
 				<tr>
+					<th>Product Id</th>
+					<th>User</th>
 					<th>Product Name</th>
-					<th>Price</th>
-					<th>Theme</th>
-					<th>In Stock</th>
-					<th>Action</th>
+					<th>Product Price</th>
+					<th>Product Theme</th>
+          <th>Product Theme</th>
 				</tr>
 			</thead>
 			<tbody>
-				<!-- Products will be dynamically populated here -->
-				<?php include 'get_products.php'; ?>
+      <?php
+    $counter= 1;
+    $data = $con->view();
+    foreach ($data as $rows){
+    ?>
+        <tr>
+          <td><?php echo $counter++?></td>
+          <td>
+        <?php if (!empty($rows['user_profile_picture'])): ?>
+          <img src="<?php echo htmlspecialchars($rows['user_profile_picture']); ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
+        <?php else: ?>
+          <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
+        <?php endif; ?>
+      </td>
+          <td><?php echo $rows ['productName']; ?> </td>
+          <td><?php echo $rows ['productPrice'];  ?></td>
+          <td><?php echo $rows ['productTheme'];  ?></td>
+          <td><?php echo $rows ['productImage'];       ?></td>
+          <td><?php echo $rows ['productStock'];  ?></td>
+    
+          
+          <td>
+          <div class="btn-group" role="group">
+          <form action="" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="<?php echo $rows['User_Id']; ?>">
+                                    <button type="submit" class="btn btn-warning ">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                </form>
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="id" value="<?php echo $rows['User_Id']; ?>">
+                                    <button type="submit" name="delete" class="btn btn-danger " onclick="return confirm('Are you sure you want to delete this user?')">
+                                    <i class="fa-solid fa-user-minus"></i>
+                                    </button>
+                                </form>
+        </div>
+        </td>
+        </tr>
+    <?php
+    }
+    ?>
+        
 			</tbody>
 		</table>
 	</div>
 </div>
 </div>
 <!-- eCommerce statistic -->
-
-<!--/ Statistics -->
-        </div>
+</div>
    </div>
     </div>
+<!--/ Statistics -->
+   
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
 

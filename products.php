@@ -1,11 +1,11 @@
 <?php
-session_start();
+
 $current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
 $con = new Database();
 
 // Fetch all products
-$products = $con->viewProducts(); // Assuming viewProducts method retrieves all products from your database
+// Assuming viewProducts method retrieves all products from your database
 
 if (isset($_SESSION['User_Id'])) {
     $id = $_SESSION['User_Id'];
@@ -17,7 +17,17 @@ if (isset($_SESSION['User_Id'])) {
     $profilePicture = 'path/to/default/profile_picture.jpg';
     $username = 'Guest';
 }
+
+
+
+
+$products = $con->getProducts(); // Assuming this method retrieves all products from the database
+
+
 ?>
+
+
+
 
 <!doctype html>
 <html lang="en">
@@ -39,7 +49,7 @@ if (isset($_SESSION['User_Id'])) {
 </head>
 
 <body>
-<?php include('user-navbar.php'); ?>
+<?php include ('user-navbar.php'); ?> 
 
 <section class="preloader">
     <div class="spinner">
@@ -61,44 +71,7 @@ if (isset($_SESSION['User_Id'])) {
         </div>
     </header>
 
-    <section class="products section-padding">
-        <div class="container">
-            <div class="row">
-
-                <?php foreach ($products as $product): ?>
-                    <div class="col-lg-4 col-12 mb-3">
-                        <div class="product-thumb">
-                            <a href="product-detail.php?id=<?php echo $product['product_id']; ?>">
-                                <img src="<?php echo $product['product_image']; ?>" class="img-fluid product-image" alt="">
-                            </a>
-
-                            <div class="product-top d-flex">
-                                <?php if ($product['is_new']): ?>
-                                    <span class="product-alert me-auto">New Arrival</span>
-                                <?php endif; ?>
-
-                                <a href="#" class="bi-heart-fill product-icon"></a>
-                            </div>
-
-                            <div class="product-info d-flex">
-                                <div>
-                                    <h5 class="product-title mb-0">
-                                        <a href="product-detail.php?id=<?php echo $product['product_id']; ?>" class="product-title-link"><?php echo $product['product_name']; ?></a>
-                                    </h5>
-
-                                    <p class="product-p"><?php echo $product['product_description']; ?></p>
-                                </div>
-
-                                <small class="product-price text-muted ms-auto">$<?php echo $product['product_price']; ?></small>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-
-            </div>
-        </div>
-    </section>
-</main>
+    
 
 <footer class="site-footer">
     <div class="container">
