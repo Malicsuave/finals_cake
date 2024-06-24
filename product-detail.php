@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
     if ($product) {
         // Product details retrieval successful, proceed with displaying details
         $productName = $product['productName'];
-        $productDescription = $product['productDescription'];
+        $productDescription = $product['productTheme'];
         $productPrice = $product['productPrice'];
         // etc.
     } else {
@@ -22,7 +22,6 @@ if (isset($_GET['id'])) {
     echo "Product ID not provided.";
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +44,7 @@ if (isset($_GET['id'])) {
         <div class="row">
             <div class="col-lg-6 col-12">
                 <div class="product-thumb">
-                <img src="<?php echo isset($product['productImage']) ? $product['productImage'] : 'default_image.jpg'; ?>" class="img-fluid product-image" alt="">
+                    <img src="<?php echo isset($product['productImage']) ? $product['productImage'] : 'default_image.jpg'; ?>" class="img-fluid product-image" alt="">
                 </div>
             </div>
 
@@ -65,22 +64,19 @@ if (isset($_GET['id'])) {
 
                 <div class="product-cart-thumb row">
                     <div class="col-lg-6 col-12">
-                        <form method="post" action="cart.php">
-                            <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
-                            <select class="form-select cart-form-select" id="inputGroupSelect01" name="quantity">
-                                <option selected>Quantity</option>
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                        </div>
+                    <form method="post" action="cart.php">
+    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+    <select class="form-select cart-form-select" id="inputGroupSelect01" name="quantity">
+        <option selected>Quantity</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+    </select>
+    <button type="submit" class="btn custom-btn cart-btn" name="add_to_cart">Add to Cart</button>
+</form>
 
-                        <div class="col-lg-6 col-12 mt-4 mt-lg-0">
-                            <button type="submit" class="btn custom-btn cart-btn">Add to Cart</button>
-                        </div>
-                    </form>
                 </div>
 
                 <p>

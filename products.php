@@ -21,7 +21,7 @@ if (isset($_SESSION['User_Id'])) {
 
 
 
-$products = $con->getProducts(); // Assuming this method retrieves all products from the database
+$products = $con->viewProducts(); // Assuming this method retrieves all products from the database
 
 
 ?>
@@ -71,9 +71,7 @@ $products = $con->getProducts(); // Assuming this method retrieves all products 
         </div>
     </header>
 
-<<<<<<< HEAD
-    
-=======
+
     <section class="products section-padding">
         <div class="container">
             <div class="row">
@@ -118,7 +116,6 @@ $products = $con->getProducts(); // Assuming this method retrieves all products 
         </div>
     </section>
 </main>
->>>>>>> 64b2a1c4e498d5fef483c637b032767d329f529f
 
 <footer class="site-footer">
     <div class="container">

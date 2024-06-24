@@ -467,17 +467,4 @@ $messages = $con->getAllMessages();
     <script src="theme-assets/js/scripts/pages/dashboard-lite.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL JS-->
   </body>
-</html>base using Database class method
-            $insertResult = $con->insertProduct($productName, $productDescription, $productPrice, $imagePath);
-            
-            if ($insertResult) {
-                echo "Product inserted successfully!";
-            } else {
-                echo "Error inserting product.";
-            }
-        } else {
-            echo "Sorry, there was an error uploading your file.";
-        }
-    }
-}
-?>
+</html>

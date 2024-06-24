@@ -282,14 +282,15 @@ https://www.tooplate.com/view/2127-little-fashion
             </section>
 
             <section class="featured-product section-padding">
-                <div class="container">
-                    <div class="row">
-                        
-                        <div class="col-12 text-center">
-                            <h2 class="mb-5">Featured Products</h2>
-                        </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="mb-5">Featured Products</h2>
+            </div>
 
-                        <?php foreach ($products as $product): ?>
+            <?php 
+            $displayProducts = array_slice($products, 0, 3);
+            foreach ($displayProducts as $product): ?>
                 <div class="col-lg-4 col-12 mb-3">
                     <div class="product-thumb">
                         <a href="product-detail.php?id=<?php echo $product['id']; ?>">
@@ -324,6 +325,8 @@ https://www.tooplate.com/view/2127-little-fashion
                     </div>
                 </div>
             <?php endforeach; ?>
+
+
 
                         <div class="col-12 text-center">
                             <a href="products.php" class="view-all">View All Products</a>
