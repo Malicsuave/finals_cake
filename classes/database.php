@@ -167,18 +167,12 @@ class database {
 
     // Cart-related methods
 
-    function getCartItems($user_id) {
-        try {
-            $query = $this->conn->prepare("SELECT c.Carts_Id, c.quantity, p.productName, p.productPrice, p.productImage 
-                                    FROM carts c 
-                                    JOIN products p ON c.id = p.id 
-                                    WHERE c.User_Id = ?");
-            $query->execute([$user_id]);
-            return $query->fetchAll(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            return [];
-        }
+    public function getCartItems($userId) {
+        $query = $this->conn->prepare("SELECT carts.*, products.productName, products.productPrice FROM carts JOIN products ON carts.id = products.id WHERE carts.User_Id = ?");
+        $query->execute([$userId]);
+        return $query->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     function updateCartItemQuantity($cart_id, $quantity, $user_id) {
         try {
@@ -190,15 +184,11 @@ class database {
         }
     }
 
-    function removeCartItem($cart_id, $user_id) {
-        try {
-            $query = $this->conn->prepare("DELETE FROM carts WHERE Carts_Id = ? AND User_Id = ?");
-            $query->execute([$cart_id, $user_id]);
-            return true;
-        } catch (PDOException $e) {
-            return false;
-        }
+    public function removeFromCart($userId, $productId) {
+        $query = $this->conn->prepare("DELETE FROM carts WHERE User_Id = ? AND id = ?");
+        return $query->execute([$userId, $productId]);
     }
+    
 
     function clearCart($user_id) {
         try {
@@ -251,32 +241,24 @@ class database {
         }
     }
     public function addToCart($userId, $productId, $quantity) {
-        // Check if the product is already in the cart
-        $query = "SELECT * FROM cart WHERE User_Id = ? AND id = ?";
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param('ii', $userId, $productId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        if ($result->num_rows > 0) {
-            // Product is already in the cart, update the quantity
-            $query = "UPDATE cart SET quantity = quantity + ? WHERE User_Id = ? AND id = ?";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('iii', $quantity, $userId, $productId);
-        } else {
-            // Product is not in the cart, insert a new row
-            $query = "INSERT INTO cart (User_Id, id, quantity) VALUES (?, ?, ?)";
-            $stmt = $this->conn->prepare($query);
-            $stmt->bind_param('iii', $userId, $productId, $quantity);
-        }
-        
-        // Execute the query and check for errors
-        if ($stmt->execute()) {
-            return true;
-        } else {
-            return false;
-        }
+        $query = $this->conn->prepare("INSERT INTO carts (User_Id, id, quantity) VALUES (?, ?, ?)");
+        return $query->execute([$userId, $productId, $quantity]);
+    }    
+    public function checkout($userId, $totalPrice) {
+        // Insert checkout record
+        $query = $this->conn->prepare("INSERT INTO checkout (user_id, total_price) VALUES (?, ?)");
+        $query->execute([$userId, $totalPrice]);
+        $checkoutId = $this->conn->lastInsertId();
+    
+        // Clear the cart after checkout
+        $clearCartQuery = $this->conn->prepare("DELETE FROM carts WHERE User_Id = ?");
+        $clearCartQuery->execute([$userId]);
+    
+        return $checkoutId;
     }
+    
+    
+    
 }
 
 ?>
