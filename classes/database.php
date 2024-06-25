@@ -240,6 +240,10 @@ class database {
             return []; // Return an empty array or handle the error as needed
         }
     }
+    public function insertMessage($name, $email, $subject, $message) {
+        $query = $this->conn->prepare("INSERT INTO messages(full_name, email, subject, concern) VALUES (?,?,?,?)");
+        return $query->execute([$name, $email, $subject, $message]);
+    } 
     public function addToCart($userId, $productId, $quantity) {
         $query = $this->conn->prepare("INSERT INTO carts (User_Id, id, quantity) VALUES (?, ?, ?)");
         return $query->execute([$userId, $productId, $quantity]);
