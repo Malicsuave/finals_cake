@@ -68,6 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- BEGIN VENDOR CSS-->
     <link rel="stylesheet" type="text/css" href="theme-assets/css/vendors.css">
     <link rel="stylesheet" type="text/css" href="theme-assets/vendors/css/charts/chartist.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <!-- END VENDOR CSS-->
     <!-- BEGIN Margas's Cake  CSS-->
     <link rel="stylesheet" type="text/css" href="theme-assets/css/app-lite.css">
@@ -129,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
             <a class="dropdown-item" href="inbox.php"><i class="ft-mail"></i> My Inbox</a>
             <a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a>
-            <a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a>
+            <a class="dropdown-item" href="chat.php"><i class="ft-message-square"></i> Chats</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="logout.php"><i class="ft-power"></i> Logout</a>
         </div>
@@ -154,15 +156,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       </div>
       <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-          <li class="nav-item"><a href="admin.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+        <li class="nav-item"><a href="admin.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
           </li>
           <li class=" nav-item"><a href="charts.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Charts</span></a>
           </li>
-          <li class="nav-item"><a href="icons.php"><i class="ft-box"></i><span class="menu-title" data-i18n="">Messages</span></a>
+          <li class="nav-item"><a href="inbox.php"><i class="fa-solid fa-message"></i><span class="menu-title" data-i18n="">Messages</span></a>
           </li>
-          <li class="active "><a href="cards.php"><i class="ft-layers"></i><span class="menu-title" data-i18n="">Cards</span></a>
+          <li class="active "><a href="prod.php"><i class="fa-solid fa-plus"></i><span class="menu-title" data-i18n="">Add Product</span></a>
           </li>
-          <li class=" nav-item"><a href="buttons.php"><i class="ft-box"></i><span class="menu-title" data-i18n="">Buttons</span></a>
+          <li class=" nav-item"><a href="orders.php"><i class="fa-solid fa-bag-shopping"></i><span class="menu-title" data-i18n="">Orders</span></a>
           </li>
           
         </ul>
@@ -212,68 +214,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 <!-- Table to display existing products -->
-<div class="card">
-	<h5 class="card-header">Product List</h5>
-	<div class="card-body">
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>Product Id</th>
-					<th>User</th>
-					<th>Product Name</th>
-					<th>Product Price</th>
-					<th>Product Theme</th>
-          <th>Product Theme</th>
-				</tr>
-			</thead>
-			<tbody>
-      <?php
-    $counter= 1;
-    $data = $con->view();
-    foreach ($data as $rows){
-    ?>
-        <tr>
-          <td><?php echo $counter++?></td>
-          <td>
-        <?php if (!empty($rows['user_profile_picture'])): ?>
-          <img src="<?php echo htmlspecialchars($rows['user_profile_picture']); ?>" alt="Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
-        <?php else: ?>
-          <img src="path/to/default/profile/pic.jpg" alt="Default Profile Picture" style="width: 50px; height: 50px; border-radius: 50%;">
-        <?php endif; ?>
-      </td>
-          <td><?php echo $rows ['productName']; ?> </td>
-          <td><?php echo $rows ['productPrice'];  ?></td>
-          <td><?php echo $rows ['productTheme'];  ?></td>
-          <td><?php echo $rows ['productImage'];       ?></td>
-          <td><?php echo $rows ['productStock'];  ?></td>
-    
-          
-          <td>
-          <div class="btn-group" role="group">
-          <form action="" method="post" class="d-inline">
-                                    <input type="hidden" name="id" value="<?php echo $rows['User_Id']; ?>">
-                                    <button type="submit" class="btn btn-warning ">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                </form>
-                                <form method="POST" class="d-inline">
-                                    <input type="hidden" name="id" value="<?php echo $rows['User_Id']; ?>">
-                                    <button type="submit" name="delete" class="btn btn-danger " onclick="return confirm('Are you sure you want to delete this user?')">
-                                    <i class="fa-solid fa-user-minus"></i>
-                                    </button>
-                                </form>
-        </div>
-        </td>
-        </tr>
-    <?php
-    }
-    ?>
-        
-			</tbody>
-		</table>
-	</div>
-</div>
-</div>
+
+
 <!-- eCommerce statistic -->
 </div>
    </div>
@@ -284,11 +226,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     <footer class="footer footer-static footer-light navbar-border navbar-shadow">
-      <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2018  &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">ThemeSelection</a></span>
+      <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2024 &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">Marga's Cake</a></span>
         <ul class="list-inline float-md-right d-block d-md-inline-blockd-none d-lg-block mb-0">
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank"> More themes</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Support</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> Purchase</a></li>
+          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank">Online Reservation System</a></li>
+          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Cakes</a></li>
+          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> </a></li>
         </ul>
       </div>
     </footer>

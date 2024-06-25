@@ -10,7 +10,7 @@ class database {
 
     // Open connection and assign to $this->conn
     private function opencon() {
-        $this->conn = new PDO('mysql:host=localhost;dbname=margacake', 'root', '');
+        $this->conn = new PDO('mysql:host=localhost;dbname=cakes', 'root', '');
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
@@ -65,6 +65,24 @@ class database {
         JOIN user_address ON users.User_Id = user_address.User_Id")->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    function adminView() {
+        $query = "SELECT
+                    products.productName,
+                    products.productPrice,
+                    products.productTheme,
+                    products.productImage,
+                    products.productStock,
+                    products.created_at,
+                    CONCAT(user_address.street, ' ', user_address.barangay, ' ', user_address.city, ' ', user_address.province) AS address,
+                    users.user_profile_picture
+                  FROM
+                    products
+                  JOIN user_address ON products.User_Id = user_address.User_Id
+                  JOIN users ON products.User_Id = users.User_Id";
+        $stmt = $this->conn->query($query);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     function delete($id) {
         try {
             $this->conn->beginTransaction();
@@ -102,6 +120,8 @@ class database {
             return [];
         }
     }
+
+    
 
     function updateUser($User_Id, $username, $password, $firstname, $lastname, $birthday, $sex) {
         try { 
@@ -202,10 +222,10 @@ class database {
 
     // Product-related methods
 
-    function insertProduct($productName, $productPrice, $productTheme, $imagePath) {
+    function insertProduct($productName, $productPrice, $productTheme, $imagePath, $productStock) {
         try {
-            $query = $this->conn->prepare("INSERT INTO products (productName, productPrice, productTheme, productImage) VALUES (?,?,?,?)");
-            $query->execute([$productName, $productPrice, $productTheme, $imagePath]);
+            $query = $this->conn->prepare("INSERT INTO products (productName, productPrice, productTheme, productImage,productStock) VALUES (?,?,?,?,?)");
+            $query->execute([$productName, $productPrice, $productTheme, $imagePath, $productStock]);
             return true;
         } catch (PDOException $e) {
             return false;
@@ -261,6 +281,46 @@ class database {
         return $checkoutId;
     }
     
+    function getOrders() {
+        try {
+            $query = $this->conn->prepare("SELECT 
+                orders.Order_Id, 
+                orders.total_price, 
+                orders.status,
+                orders.created_at,
+                users.User_Id,
+                users.firstname,
+                users.lastname,
+                users.user_email,
+                GROUP_CONCAT(products.productName) AS productNames,
+                GROUP_CONCAT(products.productPrice) AS productPrices,
+                GROUP_CONCAT(products.productImage) AS productImages,
+                GROUP_CONCAT(order_items.quantity) AS quantities
+            FROM 
+                orders
+            JOIN users ON orders.User_Id = users.User_Id
+            JOIN order_items ON orders.Order_Id = order_items.Order_Id
+            JOIN products ON order_items.Product_Id = products.id
+            GROUP BY orders.Order_Id, users.User_Id
+            ORDER BY orders.created_at DESC");
+            $query->execute();
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    public function updateOrderStatus($orderId, $status) {
+        try {
+            $query = $this->conn->prepare("UPDATE orders SET status = ? WHERE Order_Id = ?");
+            $query->execute([$status, $orderId]);
+            return true;
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
     
     
 }

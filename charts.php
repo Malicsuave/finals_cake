@@ -41,6 +41,9 @@ $messages = $con->getAllMessages();
     <!-- END VENDOR CSS-->
     <!-- BEGIN Margas's Cake  CSS-->
     <link rel="stylesheet" type="text/css" href="theme-assets/css/app-lite.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+
     <!-- END Margas's Cake  CSS-->
     <!-- BEGIN Page Level CSS-->
     <link rel="stylesheet" type="text/css" href="theme-assets/css/core/menu/menu-types/vertical-menu.css">
@@ -99,7 +102,7 @@ $messages = $con->getAllMessages();
             <a class="dropdown-item" href="#"><i class="ft-user"></i> Edit Profile</a>
             <a class="dropdown-item" href="inbox.php"><i class="ft-mail"></i> My Inbox</a>
             <a class="dropdown-item" href="#"><i class="ft-check-square"></i> Task</a>
-            <a class="dropdown-item" href="#"><i class="ft-message-square"></i> Chats</a>
+            <a class="dropdown-item" href="chat.php"><i class="ft-message-square"></i> Chats</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="logout.php"><i class="ft-power"></i> Logout</a>
         </div>
@@ -124,15 +127,15 @@ $messages = $con->getAllMessages();
       </div>
       <div class="main-menu-content">
         <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation">
-          <li class="nav-item "><a href="admin.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
+        <li class="nav-item"><a href="admin.php"><i class="ft-home"></i><span class="menu-title" data-i18n="">Dashboard</span></a>
           </li>
-          <li class="active"><a href="charts.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Charts</span></a>
+          <li class=" active"><a href="charts.php"><i class="ft-pie-chart"></i><span class="menu-title" data-i18n="">Charts</span></a>
           </li>
-          <li class="nav-item"><a href="icons.php"><i class="ft-box"></i><span class="menu-title" data-i18n="">Messages</span></a>
+          <li class="nav-item"><a href="inbox.php"><i class="fa-solid fa-message"></i><span class="menu-title" data-i18n="">Messages</span></a>
           </li>
-          <li class=" nav-item"><a href="cards.php"><i class="ft-layers"></i><span class="menu-title" data-i18n="">Cards</span></a>
+          <li class="nav-item "><a href="prod.php"><i class="fa-solid fa-plus"></i>><span class="menu-title" data-i18n="">Add Product</span></a>
           </li>
-          <li class=" nav-item"><a href="buttons.php"><i class="ft-box"></i><span class="menu-title" data-i18n="">Buttons</span></a>
+          <li class=" nav-item"><a href="orders.php"><i class="fa-solid fa-bag-shopping"></i><span class="menu-title" data-i18n="">Orders</span></a>
           </li>
           
         </ul>
@@ -444,14 +447,15 @@ $messages = $con->getAllMessages();
 
 
     <footer class="footer footer-static footer-light navbar-border navbar-shadow">
-      <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2018  &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">ThemeSelection</a></span>
+      <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2024 &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">Marga's Cake</a></span>
         <ul class="list-inline float-md-right d-block d-md-inline-blockd-none d-lg-block mb-0">
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank"> More themes</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Support</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> Purchase</a></li>
+          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank">Online Reservation System</a></li>
+          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Cakes</a></li>
+          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> </a></li>
         </ul>
       </div>
     </footer>
+
 
     <!-- BEGIN VENDOR JS-->
     <script src="theme-assets/vendors/js/vendors.min.js" type="text/javascript"></script>

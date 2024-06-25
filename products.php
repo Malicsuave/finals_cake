@@ -1,8 +1,20 @@
 <?php
-
 $current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
 $con = new Database();
+
+$products = $con->viewProducts();
+
+if (isset($_SESSION['User_Id'])) {
+    $id = $_SESSION['User_Id'];
+    $data = $con->viewdata($id);
+
+    $profilePicture = $data['user_profile_picture'] ?? 'path/to/default/profile_picture.jpg';
+    $username = $_SESSION['username'];
+} else {
+    $profilePicture = 'path/to/default/profile_picture.jpg';
+    $username = 'Guest';
+}
 
 // Fetch all products
 // Assuming viewProducts method retrieves all products from your database
