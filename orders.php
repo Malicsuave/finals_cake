@@ -3,7 +3,10 @@ session_start();
 $current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
 $con = new Database();
-
+if (!isset($_SESSION['username']) || $_SESSION['account_type'] != 1) {
+  header('location:sign-in.php');
+  exit();
+}
 if (isset($_SESSION['User_Id'])) {
     $id = $_SESSION['User_Id'];
     $data = $con->viewdata($id);
@@ -15,10 +18,7 @@ if (isset($_SESSION['User_Id'])) {
     $username = 'Guest';
 }
 
-$messages = $con->getAllMessages();
-
-
-
+$orders = $con->getOrders();
 ?>
 
 <!DOCTYPE html>
@@ -53,6 +53,17 @@ $messages = $con->getAllMessages();
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
     <!-- END Custom CSS-->
+
+    <style>
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 83%;
+    background-color: #f8f9fa; /* Adjust as per your design */
+    padding: 10px 20px; /* Adjust padding as needed */
+}
+</style>
   </head>
   <body class="vertical-layout vertical-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-chartbg" data-col="2-columns">
 
@@ -88,14 +99,14 @@ $messages = $con->getAllMessages();
               </li>
               <li class="dropdown dropdown-user nav-item">
     <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-        <span class="avatar avatar-online"><img src="<?php echo $data['user_profile_picture'];; ?>" alt="avatar"></span>
+        <span class="avatar avatar-online"><img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="avatar"></span>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
         <div class="arrow_box_right">
             <a class="dropdown-item" href="#">
                 <span class="avatar avatar-online">
-                    <img src="<?php echo $data['user_profile_picture']; ?>" alt="avatar">
-                    <span class="user-name text-bold-700 ml-1"><?php echo $username; ?></span>
+                    <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="avatar">
+                    <span class="user-name text-bold-700 ml-1"><?php echo htmlspecialchars($username); ?></span>
                     <span></span>
                 </span>
             </a>
@@ -138,73 +149,94 @@ $messages = $con->getAllMessages();
           </li>
           <li class="active"><a href="orders.php"><i class="fa-solid fa-bag-shopping"></i><span class="menu-title" data-i18n="">Orders</span></a>
           </li>
+          <li class="nav-item"><a href="admin_orders.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Delivery</span></a>
+          </li>
+          <li class="nav-item"><a href="delete.php"><i class="fa-solid fa-trash"></i><span class="menu-title" data-i18n="">Delete Product</span></a>
+          </li>
         </ul>
       </div><a class="btn btn-danger btn-block btn-glow btn-upgrade-pro mx-1" href="index.php" target="_blank">Marga's Cake</a>
       <div class="navigation-background"></div>
       <div class="navigation-background"></div>
     </div>
-
     <div class="app-content content">
-      <div class="content-wrapper">
-        <div class="content-wrapper-before"></div>
+    <div class="content-wrapper">
         <div class="content-header row">
+            <!-- Content header -->
         </div>
-        <div class="content-body"><!-- Chart -->
-
-<div class="app-content content">
-  <div class="content-wrapper">
-    <div class="content-wrapper-before"></div>
-    <div class="content-header row">
+        <section class="orders section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-12">
+            <h2 class="text-center mb-4">Checkout Details</h2>
+            <div class="table-responsive text-center">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>User ID</th>
+                                <th>Total Price</th>
+                                <th>Quantity</th>
+                                <th>Status</th>
+                                <th>Check-Out Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($orders)) { ?>
+                                <?php foreach ($orders as $order): ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($order['checkout_Id']); ?></td>
+                                        <td><?php echo htmlspecialchars($order['User_Id']); ?></td>
+                                        <td>$<?php echo htmlspecialchars($order['total_price']); ?></td>
+                                        <td><?php echo htmlspecialchars($order['quantity']); ?></td>
+                                        <td><?php echo htmlspecialchars($order['status']); ?></td>
+                                        <td><?php echo htmlspecialchars($order['checkout_date']); ?></td>
+                                        <td>
+                                        <form action="update.php" method="post" class="d-inline">
+    <div class="dropdown">
+        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Update
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <button class="dropdown-item text-success" type="submit" name="status" value="complete">Complete</button>
+            <button class="dropdown-item text-warning" type="submit" name="status" value="pending">Pending</button>
+        </div>
     </div>
-    <div class="content-body">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>User ID</th>
-            <th>Username</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Product Name</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <?php foreach ($products as $product): ?>
-          <tr>
-            <td><?php echo $product['User_Id']; ?></td>
-            <td><?php echo $product['username']; ?></td>
-            <td><?php echo $product['firstname']; ?></td>
-            <td><?php echo $product['lastname']; ?></td>
-            <td><?php echo $product['productName']; ?></td>
-            <td>
-              <form method="post" style="display:inline;">
-                <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
-              </form>
-              <form method="post" style="display:inline;">
-                <input type="hidden" name="product_id" value="<?php echo $product['product_id']; ?>">
-                <button type="submit" name="action" value="reject" class="btn btn-danger">Reject</button>
-              </form>
-            </td>
-          </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+    <input type="hidden" name="orderId" value="<?php echo htmlspecialchars($order['checkout_Id']); ?>">
+</form>
+
+                                        </td>
+                                        
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php } else { ?>
+                                <tr>
+                                    <td colspan="8">No orders found.</td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
+</section>
+    
 
-
-    <footer class="footer footer-static footer-light navbar-border navbar-shadow">
-      <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2024 &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">Marga's Cake</a></span>
+     <footer class="footer footer-static footer-light navbar-border navbar-shadow fixed-bottom">
+    <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2">
+        <span class="float-md-left d-block d-md-inline-block">
+            2024 &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">Marga's Cake</a>
+        </span>
         <ul class="list-inline float-md-right d-block d-md-inline-blockd-none d-lg-block mb-0">
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank">Online Reservation System</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Cakes</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> </a></li>
+            <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank">Online Reservation System</a></li>
+            <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Cakes</a></li>
+            <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> </a></li>
         </ul>
-      </div>
-    </footer>
+    </div>
+</footer>
 
+     </div>
 
     <!-- BEGIN VENDOR JS-->
     <script src="theme-assets/vendors/js/vendors.min.js" type="text/javascript"></script>

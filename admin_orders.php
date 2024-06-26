@@ -4,48 +4,28 @@ $current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
 $con = new Database();
 if (!isset($_SESSION['username']) || $_SESSION['account_type'] != 1) {
-  header('location: sign-in.php');
+  header('location:sign-in.php');
   exit();
 }
+$userId = isset($_SESSION['User_Id']) ? $_SESSION['User_Id'] : null; // Initialize $userId with session value or null
 
-// Retrieve user data if logged in
-if (isset($_SESSION['User_Id'])) {
-  $id = $_SESSION['User_Id'];
-  $data = $con->viewdata($id); // Assuming this retrieves user data, adjust if needed
+if (isset($userId)) {
+    $data = $con->viewdata($userId);
 
-  // Example: Get user profile picture
-  $profilePicture = $data['user_profile_picture'] ?? 'path/to/default/profile_picture.jpg';
-  $username = $_SESSION['username'];
-} else {
-  // Default profile picture and username for guests or if session data is not available
-  $profilePicture = 'path/to/default/profile_picture.jpg';
-  $username = 'Guest';
-}
-
-
-// Check if user is logged in and is an admin (account_type == 1)
-if (!isset($_SESSION['username']) || $_SESSION['account_type'] != 1) {
-    header('location: sign-in.php');
-    exit();
-}
-
-// If logged in as admin, proceed with admin-specific tasks
-if (isset($_SESSION['User_Id'])) {
-    $id = $_SESSION['User_Id'];
-    $data = $con->viewdata($id); // Assuming this retrieves user data, adjust if needed
-
-    // Example: Get user profile picture
     $profilePicture = $data['user_profile_picture'] ?? 'path/to/default/profile_picture.jpg';
-    $username = $_SESSION['username'];
-
-    // Example: Get all messages (adjust as needed for admin functionality)
-    $messages = $con->getAllMessages();
+    $username = $_SESSION['username'] ?? 'Guest'; // Ensure fallback for username if not set in session
+} else {
+    $profilePicture = 'path/to/default/profile_picture.jpg';
+    $username = 'Guest';
 }
 
+$orders = []; // Initialize $orders as an empty array to avoid potential warnings
 
-
-$messages = $con->getAllMessages();
+if ($userId) {
+    $orders = $con->getUserOrders($userId); // Fetch orders only if $userId is set
+}
 ?>
+
 
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -74,61 +54,18 @@ $messages = $con->getAllMessages();
     <link rel="stylesheet" type="text/css" href="theme-assets/css/core/menu/menu-types/vertical-menu.css">
     <link rel="stylesheet" type="text/css" href="theme-assets/css/core/colors/palette-gradient.css">
     <link rel="stylesheet" type="text/css" href="theme-assets/css/pages/dashboard-ecommerce.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <!-- END Page Level CSS-->
     <!-- BEGIN Custom CSS-->
     <!-- END Custom CSS-->
 
     <style>
-     
-        .chat-container {
-            width: 700px;
-            height: 500px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            margin-left: 165px;
-            margin-top: 20px;
-        }
-        .chat-box {
-            flex: 1;
-            padding: 10px;
-            overflow-y: auto;
-            border-bottom: 1px solid #ccc;
-        }
-        .chat-box p {
-            margin: 0;
-            padding: 5px 10px;
-            background-color: #e1e1e1;
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-        .input-box {
-            display: flex;
-            padding: 20px;
-            border-top: 1px solid #ccc;
-        }
-        .input-box input[type="text"] {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-        .input-box input[type="submit"] {
-            padding: 10px 20px;
-            border: none;
-            background-color: #fa626b;
-            color: #fff;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
+
+
+</style>
   </head>
-  <body class="vertical-layout vertical-menu 2-columns menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-chartbg" data-col="2-columns">
+  <body class="vertical-layout vertical-menu 2-columns   menu-expanded fixed-navbar" data-open="click" data-menu="vertical-menu" data-color="bg-chartbg" data-col="2-columns">
 
     <!-- fixed-top-->
     <nav class="header-navbar navbar-expand-md navbar navbar-with-menu navbar-without-dd-arrow fixed-top navbar-semi-light">
@@ -162,14 +99,15 @@ $messages = $con->getAllMessages();
               </li>
               <li class="dropdown dropdown-user nav-item">
     <a class="dropdown-toggle nav-link dropdown-user-link" href="#" data-toggle="dropdown">
-        <span class="avatar avatar-online"><img src="<?php echo $profilePicture; ?>" alt="avatar"></span>
+        <span class="avatar avatar-online"><img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="avatar"></span>
     </a>
     <div class="dropdown-menu dropdown-menu-right">
         <div class="arrow_box_right">
             <a class="dropdown-item" href="#">
                 <span class="avatar avatar-online">
-                    <img src="<?php echo $profilePicture; ?>" alt="avatar">
-                    <span class="user-name text-bold-700 ml-1"><?php echo $username; ?></span>
+                    <img src="<?php echo htmlspecialchars($profilePicture); ?>" alt="avatar">
+                    <span class="user-name text-bold-700 ml-1"><?php echo htmlspecialchars($username); ?></span>
+                    <span></span>
                 </span>
             </a>
             <div class="dropdown-divider"></div>
@@ -190,7 +128,8 @@ $messages = $con->getAllMessages();
 
     <!-- ////////////////////////////////////////////////////////////////////////////-->
 
-    <div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
+
+    <div class="main-menu menu-fixed menu-light menu-accordion    menu-shadow " data-scroll-to-active="true" data-img="theme-assets/images/backgrounds/02.jpg">
       <div class="navbar-header">
         <ul class="nav navbar-nav flex-row">       
           <li class="nav-item mr-auto"><a class="navbar-brand" href="admin.php"><img class="brand-logo" alt="Margas's Cake admin logo" src="theme-assets/images/logo/logo.png"/>
@@ -206,62 +145,90 @@ $messages = $con->getAllMessages();
           </li>
           <li class="nav-item"><a href="inbox.php"><i class="fa-solid fa-message"></i><span class="menu-title" data-i18n="">Messages</span></a>
           </li>
-          <li class="nav-item "><a href="prod.php"><i class="fa-solid fa-plus"></i><span class="menu-title" data-i18n=""> Add Product</span></a>
+          <li class="nav-item "><a href="prod.php"><i class="fa-solid fa-plus"></i><span class="menu-title" data-i18n="">Add Product</span></a>
           </li>
-          <li class=" nav-item"><a href="orders.php"><i class="fa-solid fa-bag-shopping"></i><span class="menu-title" data-i18n="">Orders</span></a>
+          <li class="nav-item"><a href="orders.php"><i class="fa-solid fa-bag-shopping"></i><span class="menu-title" data-i18n="">Orders</span></a>
           </li>
-          <li class="nav-item"><a href="admin_orders.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Delivery</span></a>
+          <li class="active"><a href="admin_orders.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Delivery</span></a>
           </li>
           <li class="nav-item"><a href="delete.php"><i class="fa-solid fa-trash"></i><span class="menu-title" data-i18n="">Delete Product</span></a>
           </li>
         </ul>
-      </div>
-      <a class="btn btn-danger btn-block btn-glow btn-upgrade-pro mx-1" href="index.php" target="_blank">Marga's Cake</a>
+      </div><a class="btn btn-danger btn-block btn-glow btn-upgrade-pro mx-1" href="index.php" target="_blank">Marga's Cake</a>
+      <div class="navigation-background"></div>
       <div class="navigation-background"></div>
     </div>
-
     <div class="app-content content">
-      <div class="content-wrapper">
-        <div class="content-wrapper-before"></div>
-        <div class="content-header row"></div>
-        <div class="content-body">
-          <div class="row">
-            <div class="col-xl-4 col-lg-6 col-md-12">
-              <div class="chat-container">
-                <div class="chat-box">
-                  <?php
-                  if (!empty($_SESSION['messages'])) {
-                      foreach ($_SESSION['messages'] as $msg) {
-                          echo '<p>' . $msg . '</p>';
-                      }
-                  }
-                  ?>
-                </div>
-                <div class="input-box">
-                  <form method="POST" action="chat.php">
-                    <input type="text" name="message" placeholder="Type your message here..." required>
-                    <input type="submit" value="Send">
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="content-wrapper">
+        <div class="content-header row">
+            <!-- Content header -->
         </div>
-      </div>
+        <section class="orders section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-12">
+            <h2 class="text-center  mb-5">Delivery Details</h2>
+            <div class="table-responsive text-center">
+                    <table class="table table-bordered">
+                    <thead>
+    <tr>
+        <th>Delivery ID</th>
+        <th>User ID</th>
+        <th>Full Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Order Date</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody>
+    <?php if (!empty($orders)) { ?>
+        <?php foreach ($orders as $order): ?>
+            <tr>
+                <td><?php echo htmlspecialchars($order['delivery_id']); ?></td>
+                <td><?php echo htmlspecialchars($order['User_Id']); ?></td>
+                <td><?php echo htmlspecialchars($order['fullname']); ?></td>
+                <td><?php echo htmlspecialchars($order['phone']); ?></td>
+                <td><?php echo htmlspecialchars($order['email']); ?></td>
+                <td><?php echo htmlspecialchars($order['address']); ?></td>
+                <td><?php echo htmlspecialchars($order['checkout_date']); ?></td>
+                <td><?php echo htmlspecialchars($order['status']); ?></td>
+                <td>
+                <form action="updateDelivery.php" method="post" class="d-inline">
+    <input type="hidden" name="delivery_id" value="<?php echo htmlspecialchars($order['delivery_id']); ?>">
+    <div class="dropdown">
+        <button class="btn btn-danger dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Update
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <button class="dropdown-item text-success" type="submit" name="status" value="Delivered">Delivered</button>
+            <button class="dropdown-item text-warning" type="submit" name="status" value="In-transit">In-Transit</button>
+        </div>
     </div>
+</form>
 
-    <!-- ////////////////////////////////////////////////////////////////////////////-->
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php } else { ?>
+        <tr>
+            <td colspan="9">No deliveries found.</td>
+        </tr>
+    <?php } ?>
+</tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+    
 
-    <footer class="footer footer-static footer-light navbar-border navbar-shadow">
-      <div class="clearfix blue-grey lighten-2 text-sm-center mb-0 px-2"><span class="float-md-left d-block d-md-inline-block">2024 &copy; Copyright <a class="text-bold-800 grey darken-2" href="https://themeselection.com" target="_blank">Marga's Cake</a></span>
-        <ul class="list-inline float-md-right d-block d-md-inline-blockd-none d-lg-block mb-0">
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/" target="_blank">Online Reservation System</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/support" target="_blank"> Cakes</a></li>
-          <li class="list-inline-item"><a class="my-1" href="https://themeselection.com/products/Margas's Cake-admin-modern-bootstrap-webapp-dashboard-html-template-ui-kit/" target="_blank"> </a></li>
-        </ul>
-      </div>
-    </footer>
+     
 
+     </div>
 
     <!-- BEGIN VENDOR JS-->
     <script src="theme-assets/vendors/js/vendors.min.js" type="text/javascript"></script>

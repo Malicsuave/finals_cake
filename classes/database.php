@@ -1,7 +1,7 @@
 <?php
 
 class database {
-    private $conn;
+    public $conn;
 
     // Constructor to initialize database connection
     function __construct() {
@@ -9,7 +9,7 @@ class database {
     }
 
     // Open connection and assign to $this->conn
-    private function opencon() {
+    function opencon() {
         $this->conn = new PDO('mysql:host=localhost;dbname=cakes', 'root', '');
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
@@ -37,7 +37,7 @@ class database {
     }
 
     function signupUser($firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture) {
-        $this->conn->prepare("INSERT INTO users (firstname, lastname, birthday, sex, user_email, username, password, user_profile_picture) VALUES (?,?,?,?,?,?,?,?)")
+        $this->conn->prepare("INSERT INTO users (username, password, firstname, lastname,birthday, sex, user_email, user_profile_picture) VALUES (?,?,?,?,?,?,?,?)")
             ->execute([$firstname, $lastname, $birthday, $sex, $email, $username, $password, $profilePicture]);
         return $this->conn->lastInsertId();
     }
@@ -281,48 +281,159 @@ class database {
         return $checkoutId;
     }
     
-    function getOrders() {
+
+    public function getOrders() {
         try {
-            $query = $this->conn->prepare("SELECT 
-                orders.Order_Id, 
-                orders.total_price, 
-                orders.status,
-                orders.created_at,
-                users.User_Id,
-                users.firstname,
-                users.lastname,
-                users.user_email,
-                GROUP_CONCAT(products.productName) AS productNames,
-                GROUP_CONCAT(products.productPrice) AS productPrices,
-                GROUP_CONCAT(products.productImage) AS productImages,
-                GROUP_CONCAT(order_items.quantity) AS quantities
-            FROM 
-                orders
-            JOIN users ON orders.User_Id = users.User_Id
-            JOIN order_items ON orders.Order_Id = order_items.Order_Id
-            JOIN products ON order_items.Product_Id = products.id
-            GROUP BY orders.Order_Id, users.User_Id
-            ORDER BY orders.created_at DESC");
-            $query->execute();
+            $query = $this->conn->query("SELECT * FROM checkout ORDER BY checkout_date DESC");
             return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return [];
         }
     }
+    
 
-    public function updateOrderStatus($orderId, $status) {
+
+    
+    //  function getOrders() {
+    //     try {
+    //         $query = $this->conn->prepare("SELECT 
+    //         from checkout
+    //             checkout.checkout_Id, 
+    //             checkout.total_price, 
+    //             checkout.status,
+    //             checkout.checkout_date,
+    //             users.User_Id,
+    //             users.firstname,
+    //             users.lastname,
+    //             GROUP_CONCAT(products.productName) AS productNames
+    //         FROM 
+    //             checkout
+    //         JOIN users ON checkout.User_Id = users.User_Id
+        
+    //         JOIN products ON checkout.Product_Id = products.id
+    //         GROUP BY checkout.checkout_Id, users.User_Id
+    //         ORDER BY checkout.checkout_date DESC");
+    //         $query->execute();
+    //         return $query->fetchAll(PDO::FETCH_ASSOC);
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return [];
+    //     }
+    // }
+    
+    public function insertCheckoutDetails($userId, $fullname, $email, $phone, $address) {
         try {
-            $query = $this->conn->prepare("UPDATE orders SET status = ? WHERE Order_Id = ?");
-            $query->execute([$status, $orderId]);
-            return true;
+            $query = $this->conn->prepare("INSERT INTO delivery (User_Id, fullname, email, phone, address, status, checkout_date) 
+                                          VALUES (?, ?, ?, ?, ?, 'pending', NOW())");
+            return $query->execute([$userId, $fullname, $email, $phone, $address]);
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
             return false;
         }
     }
+    public function getUserCheckouts($userId) {
+        try {
+            $query = $this->conn->prepare("SELECT * FROM delivery WHERE User_Id = ? ORDER BY checkout_date DESC");
+            $query->execute([$userId]);
+            return $query->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return [];
+        }
+    }
+    // function getUserOrders($userId) {
+    //     try {
+    //         $query = $this->conn->prepare("SELECT * FROM delivery WHERE User_Id = ? ORDER BY checkout_date DESC");
+    //         $query->execute([$userId]);
+    //         return $query->fetchAll(PDO::FETCH_ASSOC);
+    //     } catch (PDOException $e) {
+    //         error_log("Database Error: " . $e->getMessage());
+    //         return [];
+    //     }
+
+        public function getUserOrders($userId) {
+            try {
+                $query = $this->conn->query("SELECT * FROM delivery ORDER BY checkout_date DESC");
+                return $query->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                error_log("Database Error: " . $e->getMessage());
+                return [];
+            }
+        }
+        public function updateDeliveryStatus($status, $delivery_id) {
+            try {
+                $stmt = $this->conn->prepare("UPDATE delivery SET status = :status WHERE delivery_id = :delivery_id");
+                $stmt->bindParam(':status', $status);
+                $stmt->bindParam(':delivery_id', $delivery_id);
+                return $stmt->execute();
+            } catch (PDOException $e) {
+                // Handle database errors here
+                echo "Error: " . $e->getMessage();
+                return false;
+            }
+        }
+       
+        
+        public function insertProofOfPayment($transaction_id, $random_transaction_number, $image_path) {
+            try {
+                // Prepare SQL statement
+                $stmt = $this->conn->prepare("INSERT INTO proof_of_payment (transaction_id, transaction_number, upload_photo, uploaded_at, approved) 
+                                             VALUES (:transaction_id, :random_transaction_number, :image_path, NOW(), 0)");
+                
+                // Bind parameters
+                $stmt->bindParam(':transaction_id', $transaction_id);
+                $stmt->bindParam(':random_transaction_number', $random_transaction_number);
+                $stmt->bindParam(':upload_photo', $image_path);
+                
+                // Execute the query
+                if ($stmt->execute()) {
+                    return true; // Return true if insertion is successful
+                } else {
+                    return false; // Return false if insertion fails
+                }
+            } catch (PDOException $e) {
+                echo "Error: " . $e->getMessage();
+                return false; // Return false on exception
+            }
+        }
+       
+
+        public function deleteProduct($product_id) {
+            $stmt = $this->conn->prepare("DELETE FROM products WHERE id = :id");
+            $stmt->bindParam(':id', $product_id);
+            return $stmt->execute();
+        }
+        // Method to view all products
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
     
+        
+
+
+  
     
-}
+
+
+
+// Example methods in Database class
+ 
 
 ?>

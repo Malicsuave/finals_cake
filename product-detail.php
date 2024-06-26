@@ -77,7 +77,7 @@ if (isset($_GET['id'])) {
                     </div>
 
                     <div class="col-lg-6 col-12 mt-4 mt-lg-0">
-                        <button type="submit" class="btn custom-btn cart-btn">Add to Cart</button>
+                        <button type="submit" class="btn custom-btn cart-btn" >Add to Cart</button>
                     </div>
                         </form>
                 </div>

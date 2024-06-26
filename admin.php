@@ -4,22 +4,26 @@ $current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
 $con = new Database();
 
-if (isset($_SESSION['User_Id'])) {
-    $id = $_SESSION['User_Id'];
-    $data = $con->viewdata($id);
-
-    $profilePicture = $data['user_profile_picture'] ?? 'path/to/default/profile_picture.jpg';
-    $username = $_SESSION['username'];
-} else {
-    $profilePicture = 'path/to/default/profile_picture.jpg';
-    $username = 'Guest';
+// Check if user is logged in and is an admin (account_type == 1)
+if (!isset($_SESSION['username']) || $_SESSION['account_type'] != 1) {
+    header('location: sign-in.php');
+    exit();
 }
 
-$messages = $con->getAllMessages();
+// If logged in as admin, proceed with admin-specific tasks
+if (isset($_SESSION['User_Id'])) {
+    $id = $_SESSION['User_Id'];
+    $data = $con->viewdata($id); // Assuming this retrieves user data, adjust if needed
 
+    // Example: Get user profile picture
+    $profilePicture = $data['user_profile_picture'] ?? 'path/to/default/profile_picture.jpg';
+    $username = $_SESSION['username'];
 
-
+    // Example: Get all messages (adjust as needed for admin functionality)
+    $messages = $con->getAllMessages();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -136,7 +140,10 @@ $messages = $con->getAllMessages();
           </li>
           <li class=" nav-item"><a href="orders.php"><i class="fa-solid fa-bag-shopping"></i><span class="menu-title" data-i18n="">Orders</span></a>
           </li>
-          
+          <li class="nav-item"><a href="admin_orders.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Delivery</span></a>
+          </li>
+          <li class="nav-item"><a href="delete.php"><i class="fa-solid fa-trash"></i><span class="menu-title" data-i18n="">Delete Product</span></a>
+          </li>
         </ul>
       </div><a class="btn btn-danger btn-block btn-glow btn-upgrade-pro mx-1" href="index.php" target="_blank">Marga's Cake</a>
       <div class="navigation-background"></div>

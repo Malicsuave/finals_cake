@@ -87,12 +87,13 @@ if (isset($_SESSION['User_Id'])) {
                                <img src="<?php echo $data['user_profile_picture']; ?>" width="30" height="30" class="rounded-circle mr-1" alt="Profile Picture"> <?php echo $username; ?>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" href=""><i class="fas fa-user-circle"></i> Upload Profile Picture</a></li>
+                                <li><a class="dropdown-item" href="orderstatus.php"><i class="fas fa-user-circle"></i>Orders</a></li>
                                 <li><a class="dropdown-item" href="register.php"><i class="fas fa-user-edit"></i> Register</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-key"></i> Change Password</a></li>
                                 <li><a class="dropdown-item" href="cart.php"><i class="fa fa-cart-shopping"></i> Cart</a></li>
                                 <li><a class="dropdown-item" href="products.php"><span> </span> <i class="fa-solid fa-cake-candles"></i>Product</a></li>
+                                <li><a class="dropdown-item" href="payment.php"><span> </span> <i class="fa-solid fa-money-bill"></i></i>Proof of Payment</a></li>
                                 <li><a class="dropdown-item" href="logout.php" onclick="return confirm('Are you sure you want to leave?')"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                                
                             </ul>
                         </li>
                     </ul>

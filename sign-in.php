@@ -1,27 +1,31 @@
 <?php
- 
- require_once('classes/database.php');
- $con=new database();
+require_once('classes/database.php');
+$con = new database();
 session_start();
 
 if (isset($_POST['login'])) {
-  $username = $_POST['username'];
-  $password = $_POST['password'];
-  $result = $con->check($username, $password);  
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+    $result = $con->check($username, $password);  
 
-  if ($result) {
-    $_SESSION['username'] = $result['username'];
-    $_SESSION['User_Id'] = $result['User_Id'];
-    $_SESSION['account_type'] = $result['account_type'];  // Store account type in session
+    if ($result) {
+        $_SESSION['username'] = $result['username'];
+        $_SESSION['User_Id'] = $result['User_Id'];
+        $_SESSION['account_type'] = $result['account_type'];  // Store account type in session
 
-    if ($result['account_type'] == 0) {
-        header('location: index.php');
-    } else if ($result['account_type'] == 1) {
-        header('location: admin.php');
-    }   
-} else {
-    $error = "Incorrect username or password";
-}
+        // Debugging
+        echo "Account Type: " . $_SESSION['account_type']; // Check if account type is correctly set
+
+        if ($_SESSION['account_type'] == 0) {
+            header('location: index.php');
+            exit(); // Ensure no further code execution after redirect
+        } else if ($_SESSION['account_type'] == 1) {
+            header('location: admin.php');
+            exit(); // Ensure no further code execution after redirect
+        }   
+    } else {
+        $error_message = "Incorrect username or password";
+    }
 }
 ?>
 

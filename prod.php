@@ -3,7 +3,10 @@ session_start();
 $current_page = basename($_SERVER['PHP_SELF']);
 require_once('classes/database.php');
 $con = new Database();
-
+if (!isset($_SESSION['username']) || $_SESSION['account_type'] != 1) {
+  header('location:sign-in.php');
+  exit();
+}
 if (isset($_SESSION['User_Id'])) {
     $id = $_SESSION['User_Id'];
     $data = $con->viewdata($id);
@@ -14,10 +17,15 @@ if (isset($_SESSION['User_Id'])) {
     $profilePicture = 'path/to/default/profile_picture.jpg';
     $username = 'Guest';
 }
+if (isset($_GET['message'])) {
+  echo '<div class="alert alert-success">' . $_GET['message'] . '</div>';
+} elseif (isset($_GET['error'])) {
+  echo '<div class="alert alert-danger">' . $_GET['error'] . '</div>';
+}
 
 
 
-// Check if form is submitted
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle file upload
     $uploadDir = 'uploads/';
@@ -41,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // File upload failed
         echo "File upload failed.";
     }
+
 }
 ?>
 
@@ -49,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 
-?>
+
 
 <!DOCTYPE html>
 <html class="loading" lang="en" data-textdirection="ltr">
@@ -166,7 +175,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </li>
           <li class=" nav-item"><a href="orders.php"><i class="fa-solid fa-bag-shopping"></i><span class="menu-title" data-i18n="">Orders</span></a>
           </li>
-          
+          <li class="nav-item"><a href="admin_orders.php"><i class="ft-credit-card"></i><span class="menu-title" data-i18n="">Delivery</span></a>
+          </li>
+          <li class="nav-item"><a href="delete.php"><i class="fa-solid fa-trash"></i><span class="menu-title" data-i18n="">Delete Product</span></a>
+          </li>
+      
         </ul>
       </div><a class="btn btn-danger btn-block btn-glow btn-upgrade-pro mx-1" href="index.php" target="_blank">Marga's Cake</a>
       <div class="navigation-background"></div>

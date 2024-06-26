@@ -2,7 +2,9 @@
 session_start();
 require_once('classes/database.php');
 $con = new Database();
-
+echo $_SESSION['User_Id'];if (empty($_SESSION['username'])) {   
+    header('location:sign-in.php');
+  }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_SESSION['User_Id'])) {
         $userId = $_SESSION['User_Id'];
@@ -119,11 +121,14 @@ if (isset($_SESSION['User_Id'])) {
                             <h3>Grand Total: $<?php echo $Grand_total; ?></h3>
                         </div>
                         <form method="post" action="cart.php">
-                            <input type="hidden" name="checkout" value="1">
-                            <button type="submit" class="btn btn-success">Checkout</button>
-                        </form>
+    <input type="hidden" name="checkout" value="1">
+    <button type="submit" class="btn btn-success">Checkout</button>
+</form>
                     <?php } else { ?>
                         <p>Your cart is empty.</p>
+                        <form method="post" action="checkout.php">
+    <input type="hidden" name="checkout" value="1">
+    <button type="submit" class="btn btn-success">Delivery</button>
                     <?php } ?>
                 </div>
             </div>

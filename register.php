@@ -17,6 +17,7 @@ if (isset($_POST['multisave'])) {
     $lastname = $_POST['lastname'];
     $birthday = $_POST['birthday'];
     $sex = $_POST['sex'];
+   
   
     // Getting the address information
     $street = $_POST['user_street'];
@@ -75,7 +76,7 @@ if (isset($_POST['multisave'])) {
             // Save the user data and the path to the profile picture in the database
             $profile_picture_path = 'uploads/'.$new_file_name; // Save the new file name (without directory)
             
-            $userID = $con->signupUser($firstname, $lastname, $birthday, $sex, $email, $username, $password, $profile_picture_path);
+            $userID = $con->signupUser($username, $password, $firstname, $lastname, $birthday, $sex,$email, $profile_picture_path);
 
             if ($userID) {
                 // Signup successful, insert address into users_address table
@@ -163,6 +164,10 @@ if (isset($_POST['multisave'])) {
             <div class="valid-feedback">Looks good!</div>
             <div class="invalid-feedback">Please confirm your password.</div>
           </div>
+        
+            
+            
+        </div>
         </div>
       </div>
       <button type="button" id="nextButton" class="btn btn-primary mt-3" onclick="nextStep()">Next</button>
@@ -187,6 +192,7 @@ if (isset($_POST['multisave'])) {
                   <div class="invalid-feedback">Please enter a valid last name.</div>
                 </div>
               </div>
+              
 
               <div class="form-row">
                 <div class="form-group col-md-6">

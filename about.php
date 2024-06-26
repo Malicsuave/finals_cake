@@ -109,26 +109,26 @@ https://www.tooplate.com/view/2127-little-fashion
                     <div class="row">
 
                         <div class="col-lg-9 mx-auto col-11">
-                            <h2 class="text-center">Customer love, <br> <span>Little</span> Fashion</h2>
+                            <h2 class="text-center">Customer love, <br> <span>Marga's</span> Fashion</h2>
 
                             <div class="slick-testimonial">
                                 <div class="slick-testimonial-caption">
-                                    <p class="lead">Over three years in business, We’ve had the chance to work on a variety of projects, with companies Lorem ipsum dolor sit amet</p>
+                                    <p class="lead">Over three years in the art of baking, we at Marga's Cake have crafted more than just cakes; we've created memories. From humble beginnings in a small kitchen to becoming a cherished part of celebrations across the Batangas, our journey is defined by passion, creativity, and a commitment to sweetness.</p>
 
                                     <div class="slick-testimonial-client d-flex align-items-center mt-4">
                                         <img src="images/people/senior-man-wearing-white-face-mask-covid-19-campaign-with-design-space.jpeg" class="img-fluid custom-circle-image me-3" alt="">
 
-                                        <span>George, <strong class="text-muted">Digital Art Fashion</strong></span>
+                                        <span>George, <strong class="text-muted">Customer for Two Years</strong></span>
                                     </div>
                                 </div>
 
                                 <div class="slick-testimonial-caption">
-                                    <p class="lead">Over three years in business, We’ve had the chance to work on a variety of projects, with companies Lorem ipsum dolor sit amet</p>
+                                    <p class="lead">From the first bite to the last crumb, their cakes have sparked joy and created lasting memories for my family and friends. I couldn't imagine celebrating without them. Here's to many more years of indulging in their delightful creations!"</p>
 
                                     <div class="slick-testimonial-client d-flex align-items-center mt-4">
                                         <img src="images/people/beautiful-woman-face-portrait-brown-background.jpeg" class="img-fluid custom-circle-image me-3" alt="">
 
-                                        <span>Sandar, <strong class="text-muted">Zoom Fashion Idea</strong></span>
+                                        <span>Sandar, <strong class="text-muted">Customer for Three Years</strong></span>
                                     </div>
                                 </div>
 
@@ -143,12 +143,12 @@ https://www.tooplate.com/view/2127-little-fashion
                                 </div>
 
                                 <div class="slick-testimonial-caption">
-                                    <p class="lead">Over three years in business, We’ve had the chance to work on a variety of projects, with companies Lorem ipsum dolor sit amet</p>
+                                    <p class="lead">What keeps me coming back, however, is not just the quality of their cakes (which are consistently delicious) but the personalized service and attention to detail. Whether it's a last-minute order or a complex design request, they always deliver with a smile.</p>
 
                                     <div class="slick-testimonial-client d-flex align-items-center mt-4">
                                         <img src="images/people/woman-wearing-mask-face-closeup-covid-19-green-background.jpeg" class="img-fluid custom-circle-image me-3" alt="">
 
-                                        <span>Catherine, <strong class="text-muted">Dress Fashion</strong></span>
+                                        <span>Catherine, <strong class="text-muted">Suki Customer</strong></span>
                                     </div>
                                 </div>
                             </div>
