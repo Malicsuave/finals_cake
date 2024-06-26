@@ -407,9 +407,50 @@ class database {
         // Method to view all products
         
 
+        public function getRecentUsername() {
+            $stmt = $this->conn->prepare("SELECT username FROM users ORDER BY created_at DESC LIMIT 1");
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+    
+        public function getProductWithHighestSales() {
+            $stmt = $this->conn->prepare("SELECT productName, SUM(quantity) AS total_sales FROM checkout JOIN products ON checkout.checkout_Id = products.id GROUP BY product_id ORDER BY total_sales DESC LIMIT 1");
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+    
+        public function getTotalProfit() {
+            $stmt = $this->conn->prepare("SELECT SUM(productPrice * quantity) AS total_profit FROM checkout JOIN products ON checkout.checkout_Id = products.id");
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
+    
+        public function getUsernameWithMostProductsBought() {
+            $stmt = $this->conn->prepare("SELECT users.username, SUM(checkout.quantity) AS total_quantity FROM checkout JOIN users ON checkout.User_Id = users.User_Id GROUP BY checkout.User_Id ORDER BY total_quantity DESC LIMIT 1");
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }
 
+        public function getOrdersStatusSummary() {
+            try {
+                $stmt = $this->conn->query("SELECT status, COUNT(*) AS total_orders
+                                           FROM checkout
+                                           GROUP BY status");
+                return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                // Handle database errors gracefully
+                error_log("Error fetching order status summary: " . $e->getMessage());
+                return false;
+            }
+        }
 
-
+        public function getTotalUsers() {
+            try {
+                $stmt = $this->conn->query("SELECT COUNT(*) AS total_users FROM users");
+                return $stmt->fetch(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                die("Error fetching total users: " . $e->getMessage());
+            }
 
 
 
@@ -424,16 +465,12 @@ class database {
 
 
     }
-    
+}
         
 
 
   
     
 
-
-
-// Example methods in Database class
- 
 
 ?>
