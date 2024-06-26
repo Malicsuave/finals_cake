@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 26, 2024 at 05:45 AM
+-- Generation Time: Jun 26, 2024 at 06:25 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -184,33 +184,38 @@ CREATE TABLE `users` (
   `sex` varchar(255) NOT NULL,
   `contact_info` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
-  `user_profile_picture` varchar(255) NOT NULL
+  `user_profile_picture` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`User_Id`, `account_type`, `username`, `password`, `firstname`, `lastname`, `birthday`, `sex`, `contact_info`, `user_email`, `user_profile_picture`) VALUES
-(1, 1, 'Mickey', 'Mouse', '', '', NULL, '', '', '', ''),
-(2, 0, 'Cheese', 'Hotdog', '', '', NULL, '', '', '', ''),
-(3, 0, 'Foot', 'Long', '', '', NULL, '', '', '', ''),
-(12, 0, 'Rey', 'pass', 'Rey', 'Malicse', '2002-03-03', 'male', '', '', ''),
-(14, 0, 'anakniluka', 'mavs', 'dj', 'aquino', '2003-09-27', 'male', '', '', ''),
-(21, 1, 'rey1', '$2y$10$PJXnifnJlFv4o5DxoC5G3esf7DmpRo8BNfmahFr1RxYaq3cjfgm4i', 'Rey ', 'Malicse', '2002-03-03', 'Male', '', 'reywillardd01@gmail.com', 'uploads/profile pic_1716340929.jpg'),
-(23, 0, 'Rey_W', '$2y$10$ZMFMvEoVvo9bza25XfuCserQ9dtrh93TzLE59/0bVu0fsgBCW5ow.', 'Rey Willard ', 'Malicse', '2002-03-30', 'Male', '', 'malicsuave@gmail.com', 'uploads/gettyimages-490703338.jpg'),
-(24, 1, 'malicsuave', '$2y$10$keBynbf8p7mQTn4htB4zRO4jhuvMPwfXBCc6FXjIKDVEP65jtpFHC', 'John', 'Doe', '1232-03-12', 'Male', '', 'you@gmail.com', 'uploads/OIP_1716447605.jpg'),
-(25, 0, 'username', 'Lolzz1230', '', '', NULL, '', '', 'username@gmail.com', ''),
-(26, 0, 'name', 'Lolzz1230', '', '', NULL, '', '', 'name@gmail.com', ''),
-(27, 0, 'new', '$2y$10$w42JtXoRangrZT6.UwIlhuc/GNltJteLPhsmfEJhyJnv78vI3Xf8q', 'new', 'new', '2002-03-01', 'Male', '', 'new@gmail.com', 'uploads/3490883874_08a361fec8_b_1718930045.jpg'),
-(28, 1, 'admin', '$2y$10$pAKsBrKzJH7ZfLTxD6bG1.e4Tt2HeSCzp1WF6wUMYRxKKm1WowM7C', 'admin', 'admin', '2001-01-01', 'Male', '', 'admin@gmail.com', 'uploads/3490883874_08a361fec8_b.jpg'),
-(29, 0, 'John', '$2y$10$oGmehphQ7ugHk3U/GAJqDeUMwfCfjX33pHFbyLKuPG1ddk8exA51K', 'John', 'Doe', '2002-02-19', 'Female', '', 'Doe@gmail.com', 'uploads/3490883874_08a361fec8_b_1719075580.jpg'),
-(30, 1, 'Jane ', '$2y$10$B1KElGTav6D8L0f27dW96OyL/X8QnneOb2eLG7FXB3SnlM4XBw8Gm', 'jane', 'doe', '2002-01-01', 'Male', '', 'janedoe@gmail.com', 'uploads/3490883874_08a361fec8_b_1719092566.jpg'),
-(31, 0, '$2y$10$YnMdjLEWz53FCdW7X8VK2uzz9.5OvfCH.7.jN0D.jNFjrxXP1CDSu', '09777726604', 'Ivan', 'Malaki', '2001-01-01', 'Male', 'ivan', 'ivan@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719345410.jpg'),
-(32, 0, '$2y$10$aQ4BHk.CaTJsWd7WCa9fgumCem6PIsKXOG/z2B92HQqL0vDOWZ0ke', '095653243245', 'Ivan', 'macapagal', '2001-01-01', 'Male', 'Ivan', 'ivan@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719345481.jpg'),
-(33, 0, '$2y$10$RzzyXUDx0TAOkGCowl8vtOMbLv9UbTUBjgkvKLP791PWhSDtHNRMO', '0966445454554', 'sample', 'sample', '2001-01-01', 'Male', 'sample', 'sample@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719346166.jpg'),
-(34, 0, 'Sarah', 'Banks', '2000-12-09', 'Male', '0000-00-00', 'Banks@gmail.com', '$2y$10$pJfOq4V6uUAeRfg6tajjjuy/YI.Py.JWPVf5pme135nObEN0vQXIy', '0966653453434', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719346413.jpg'),
-(35, 1, 'Vayne', '$2y$10$Vdsdd8jZsZtDlcXmq3Hafu0q7F/jqz6bvlfSaitFpKlbzAFMhRoP6', 'Janna', 'Town', '0000-00-00', '2002-02-03', '095654545454', 'Vayne@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719346694.jpg');
+INSERT INTO `users` (`User_Id`, `account_type`, `username`, `password`, `firstname`, `lastname`, `birthday`, `sex`, `contact_info`, `user_email`, `user_profile_picture`, `created_at`) VALUES
+(1, 1, 'Mickey', 'Mouse', '', '', NULL, '', '', '', '', '2024-06-26 03:52:10'),
+(2, 0, 'Cheese', 'Hotdog', '', '', NULL, '', '', '', '', '2024-06-26 03:52:10'),
+(3, 0, 'Foot', 'Long', '', '', NULL, '', '', '', '', '2024-06-26 03:52:10'),
+(12, 0, 'Rey', 'pass', 'Rey', 'Malicse', '2002-03-03', 'male', '', '', '', '2024-06-26 03:52:10'),
+(14, 0, 'anakniluka', 'mavs', 'dj', 'aquino', '2003-09-27', 'male', '', '', '', '2024-06-26 03:52:10'),
+(21, 1, 'rey1', '$2y$10$PJXnifnJlFv4o5DxoC5G3esf7DmpRo8BNfmahFr1RxYaq3cjfgm4i', 'Rey ', 'Malicse', '2002-03-03', 'Male', '', 'reywillardd01@gmail.com', 'uploads/profile pic_1716340929.jpg', '2024-06-26 03:52:10'),
+(23, 0, 'Rey_W', '$2y$10$ZMFMvEoVvo9bza25XfuCserQ9dtrh93TzLE59/0bVu0fsgBCW5ow.', 'Rey Willard ', 'Malicse', '2002-03-30', 'Male', '', 'malicsuave@gmail.com', 'uploads/gettyimages-490703338.jpg', '2024-06-26 03:52:10'),
+(24, 1, 'malicsuave', '$2y$10$keBynbf8p7mQTn4htB4zRO4jhuvMPwfXBCc6FXjIKDVEP65jtpFHC', 'John', 'Doe', '1232-03-12', 'Male', '', 'you@gmail.com', 'uploads/OIP_1716447605.jpg', '2024-06-26 03:52:10'),
+(25, 0, 'username', 'Lolzz1230', '', '', NULL, '', '', 'username@gmail.com', '', '2024-06-26 03:52:10'),
+(26, 0, 'name', 'Lolzz1230', '', '', NULL, '', '', 'name@gmail.com', '', '2024-06-26 03:52:10'),
+(27, 0, 'new', '$2y$10$w42JtXoRangrZT6.UwIlhuc/GNltJteLPhsmfEJhyJnv78vI3Xf8q', 'new', 'new', '2002-03-01', 'Male', '', 'new@gmail.com', 'uploads/3490883874_08a361fec8_b_1718930045.jpg', '2024-06-26 03:52:10'),
+(28, 1, 'admin', '$2y$10$pAKsBrKzJH7ZfLTxD6bG1.e4Tt2HeSCzp1WF6wUMYRxKKm1WowM7C', 'admin', 'admin', '2001-01-01', 'Male', '', 'admin@gmail.com', 'uploads/3490883874_08a361fec8_b.jpg', '2024-06-26 03:52:10'),
+(29, 0, 'John', '$2y$10$oGmehphQ7ugHk3U/GAJqDeUMwfCfjX33pHFbyLKuPG1ddk8exA51K', 'John', 'Doe', '2002-02-19', 'Female', '', 'Doe@gmail.com', 'uploads/3490883874_08a361fec8_b_1719075580.jpg', '2024-06-26 03:52:10'),
+(30, 1, 'Jane ', '$2y$10$B1KElGTav6D8L0f27dW96OyL/X8QnneOb2eLG7FXB3SnlM4XBw8Gm', 'jane', 'doe', '2002-01-01', 'Male', '', 'janedoe@gmail.com', 'uploads/3490883874_08a361fec8_b_1719092566.jpg', '2024-06-26 03:52:10'),
+(31, 0, '$2y$10$YnMdjLEWz53FCdW7X8VK2uzz9.5OvfCH.7.jN0D.jNFjrxXP1CDSu', '09777726604', 'Ivan', 'Malaki', '2001-01-01', 'Male', 'ivan', 'ivan@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719345410.jpg', '2024-06-26 03:52:10'),
+(32, 0, '$2y$10$aQ4BHk.CaTJsWd7WCa9fgumCem6PIsKXOG/z2B92HQqL0vDOWZ0ke', '095653243245', 'Ivan', 'macapagal', '2001-01-01', 'Male', 'Ivan', 'ivan@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719345481.jpg', '2024-06-26 03:52:10'),
+(33, 0, '$2y$10$RzzyXUDx0TAOkGCowl8vtOMbLv9UbTUBjgkvKLP791PWhSDtHNRMO', '0966445454554', 'sample', 'sample', '2001-01-01', 'Male', 'sample', 'sample@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719346166.jpg', '2024-06-26 03:52:10'),
+(34, 0, 'Sarah', 'Banks', '2000-12-09', 'Male', '0000-00-00', 'Banks@gmail.com', '$2y$10$pJfOq4V6uUAeRfg6tajjjuy/YI.Py.JWPVf5pme135nObEN0vQXIy', '0966653453434', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719346413.jpg', '2024-06-26 03:52:10'),
+(35, 1, 'Vayne', '$2y$10$Vdsdd8jZsZtDlcXmq3Hafu0q7F/jqz6bvlfSaitFpKlbzAFMhRoP6', 'Janna', 'Town', '0000-00-00', '2002-02-03', '095654545454', 'Vayne@gmail.com', 'uploads/360_F_362562495_Gau0POzcwR8JCfQuikVUTqzMFTo78vkF_1719346694.jpg', '2024-06-26 03:52:10'),
+(36, 0, 'testuser', 'password', 'Test', 'User', '2000-01-01', 'male', '', 'testuser@gmail.com', 'uploads/testuser.jpg', '2024-06-26 03:52:26'),
+(37, 0, 'newuser2', '$2y$10$def456', 'Bob', 'Smith', '1985-05-05', 'Male', '234-567-8901', 'bob.smith@example.com', 'uploads/bob.jpg', '2024-06-26 03:53:48'),
+(38, 1, 'newadmin', '$2y$10$ghi789', 'Carol', 'Taylor', '1978-09-09', 'Female', '345-678-9012', 'carol.taylor@example.com', 'uploads/carol.jpg', '2024-06-26 03:53:48'),
+(12345, 0, 'newuser1', '$2y$10$abc123', 'Alice', 'Johnson', '1990-01-01', 'Female', '123-456-7890', 'alice.johnson@example.com', 'uploads/alice.jpg', '2024-06-26 03:53:48');
 
 -- --------------------------------------------------------
 
@@ -350,7 +355,7 @@ ALTER TABLE `proof_of_payment`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `User_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `User_Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12346;
 
 --
 -- AUTO_INCREMENT for table `user_address`
