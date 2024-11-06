@@ -291,36 +291,7 @@ class database {
             return [];
         }
     }
-    
 
-
-    
-    //  function getOrders() {
-    //     try {
-    //         $query = $this->conn->prepare("SELECT 
-    //         from checkout
-    //             checkout.checkout_Id, 
-    //             checkout.total_price, 
-    //             checkout.status,
-    //             checkout.checkout_date,
-    //             users.User_Id,
-    //             users.firstname,
-    //             users.lastname,
-    //             GROUP_CONCAT(products.productName) AS productNames
-    //         FROM 
-    //             checkout
-    //         JOIN users ON checkout.User_Id = users.User_Id
-        
-    //         JOIN products ON checkout.Product_Id = products.id
-    //         GROUP BY checkout.checkout_Id, users.User_Id
-    //         ORDER BY checkout.checkout_date DESC");
-    //         $query->execute();
-    //         return $query->fetchAll(PDO::FETCH_ASSOC);
-    //     } catch (PDOException $e) {
-    //         error_log("Database Error: " . $e->getMessage());
-    //         return [];
-    //     }
-    // }
     
     public function insertCheckoutDetails($userId, $fullname, $email, $phone, $address) {
         try {
@@ -342,15 +313,6 @@ class database {
             return [];
         }
     }
-    // function getUserOrders($userId) {
-    //     try {
-    //         $query = $this->conn->prepare("SELECT * FROM delivery WHERE User_Id = ? ORDER BY checkout_date DESC");
-    //         $query->execute([$userId]);
-    //         return $query->fetchAll(PDO::FETCH_ASSOC);
-    //     } catch (PDOException $e) {
-    //         error_log("Database Error: " . $e->getMessage());
-    //         return [];
-    //     }
 
         public function getUserOrders($userId) {
             try {
