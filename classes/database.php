@@ -354,7 +354,7 @@ class database {
 
         public function getUserOrders($userId) {
             try {
-                $query = $this->conn->query("SELECT * FROM delivery ORDER BY checkout_date DESC");
+                $query = $this->conn->query("SELECT * FROM delivery  ORDER BY checkout_date DESC");
                 return $query->fetchAll(PDO::FETCH_ASSOC);
             } catch (PDOException $e) {
                 error_log("Database Error: " . $e->getMessage());
@@ -420,7 +420,7 @@ class database {
         }
     
         public function getTotalProfit() {
-            $stmt = $this->conn->prepare("SELECT SUM(productPrice * quantity) AS total_profit FROM checkout JOIN products ON checkout.checkout_Id = products.id");
+            $stmt = $this->conn->prepare("SELECT SUM(productPrice * quantity) AS total_profit FROM checkout JOIN products ON checkout.checkout_Id = products.id WHERE status='complete' ");
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         }

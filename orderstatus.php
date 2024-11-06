@@ -9,6 +9,7 @@ if (!isset($_SESSION['User_Id'])) {
 }
 
 $userId = $_SESSION['User_Id'];
+echo $userId;
 $orders = $con->getUserOrders($userId);
 ?>
 

@@ -172,6 +172,7 @@ $orders = $con->getOrders();
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                             
                                 <th>Order ID</th>
                                 <th>User ID</th>
                                 <th>Total Price</th>
@@ -185,9 +186,10 @@ $orders = $con->getOrders();
                             <?php if (!empty($orders)) { ?>
                                 <?php foreach ($orders as $order): ?>
                                     <tr>
+                                      
                                         <td><?php echo htmlspecialchars($order['checkout_Id']); ?></td>
                                         <td><?php echo htmlspecialchars($order['User_Id']); ?></td>
-                                        <td>$<?php echo htmlspecialchars($order['total_price']); ?></td>
+                                        <td>₱ <?php echo htmlspecialchars($order['total_price']); ?></td>
                                         <td><?php echo htmlspecialchars($order['quantity']); ?></td>
                                         <td><?php echo htmlspecialchars($order['status']); ?></td>
                                         <td><?php echo htmlspecialchars($order['checkout_date']); ?></td>

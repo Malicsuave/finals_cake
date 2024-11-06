@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $con->insertProduct($productName, $productPrice, $productTheme, $productImage, $productStock);
 
         // Redirect to admin_products.php after insertion
-        header('Location: cards.php');
+        header('Location: products.php');
         exit();
     } else {
         // File upload failed
@@ -51,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
 }
+$viewProducts = $con->viewProducts();
 ?>
 
 
@@ -200,7 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div class="card mb-4">
 	<h5 class="card-header">Add New Product</h5>
 	<div class="card-body">
-		<form action="cards.php" method="POST" enctype="multipart/form-data">
+		<form action="products.php" method="POST" enctype="multipart/form-data">
 			<div class="form-group">
 				<label for="productName">Product Name</label>
 				<input type="text" class="form-control" id="productName" name="productName" required>
