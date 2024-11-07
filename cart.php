@@ -124,6 +124,10 @@ if (isset($_SESSION['User_Id'])) {
     <input type="hidden" name="checkout" value="1">
     <button type="submit" class="btn btn-success">Checkout</button>
 </form>
+<form method="post" action="products.php">
+    <input type="hidden" name="back" value="1">
+    <button type="danger" class="btn btn-danger">Continue Shopping</button>
+</form>
                     <?php } else { ?>
                         <p>Your cart is empty.</p>
                         <form method="post" action="checkout.php">

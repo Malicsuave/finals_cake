@@ -3,12 +3,16 @@
 class database {
     public $conn;
 
-    // Constructor to initialize database connection
     function __construct() {
         $this->opencon();
     }
 
-    // Open connection and assign to $this->conn
+        public function getConnection() {
+            return $this->conn;
+        }
+    
+    
+
     function opencon() {
         $this->conn = new PDO('mysql:host=localhost;dbname=cakes', 'root', '');
         $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -224,13 +228,16 @@ class database {
 
     function insertProduct($productName, $productPrice, $productTheme, $imagePath, $productStock) {
         try {
-            $query = $this->conn->prepare("INSERT INTO products (productName, productPrice, productTheme, productImage,productStock) VALUES (?,?,?,?,?)");
+            $query = $this->conn->prepare("INSERT INTO products (productName, productPrice, productTheme, productImage, productStock) VALUES (?, ?, ?, ?, ?)");
             $query->execute([$productName, $productPrice, $productTheme, $imagePath, $productStock]);
             return true;
         } catch (PDOException $e) {
+            // Log error message
+            echo "Error inserting product: " . $e->getMessage();
             return false;
         }
     }
+    
 
     function viewProducts() {
         try {
@@ -247,7 +254,7 @@ class database {
             $query->execute([$product_id]);
             return $query->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            return []; // Return an empty array if there's an error
+            return [];
         }
     }
 
@@ -257,7 +264,7 @@ class database {
             return $query->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
-            return []; // Return an empty array or handle the error as needed
+            return []; 
         }
     }
     public function insertMessage($name, $email, $subject, $message) {
@@ -293,7 +300,18 @@ class database {
     }
 
     
-    public function insertCheckoutDetails($userId, $fullname, $email, $phone, $address) {
+    public function insertCheckoutDetails($userId, $total_price, $quantity, $id) {
+        try {
+            $query = $this->conn->prepare("INSERT INTO checkout (User_Id, total_price, checkout_date, quantity, Product_Id, status) 
+                                          VALUES (?, ?, NOW(), ?, ?, 'pending')");
+            return $query->execute([$userId, $total_price, $quantity, $id]);
+        } catch (PDOException $e) {
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+    }
+    
+    public function insertDeliveryDetails($userId, $fullname, $email, $phone, $address) {
         try {
             $query = $this->conn->prepare("INSERT INTO delivery (User_Id, fullname, email, phone, address, status, checkout_date) 
                                           VALUES (?, ?, ?, ?, ?, 'pending', NOW())");
@@ -303,6 +321,7 @@ class database {
             return false;
         }
     }
+    
     public function getUserCheckouts($userId) {
         try {
             $query = $this->conn->prepare("SELECT * FROM delivery WHERE User_Id = ? ORDER BY checkout_date DESC");

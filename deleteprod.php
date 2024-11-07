@@ -11,23 +11,24 @@ if (!isset($_SESSION['username']) || $_SESSION['account_type'] != 1) {
 require_once('classes/database.php');
 $con = new Database();
 
-// Check if product_id is set in the query string
-if (isset($_GET['id'])) {
-    $product_id = $_GET['id'];
+// Check if the 'id' parameter is set in the query string
+if (isset($_GET['product_id'])) {
+    // Sanitize the product ID
+    $product_id = intval($_GET['product_id']); // Use intval to ensure it's an integer
 
-    // Perform deletion query
+    // Perform deletion query if product ID is valid
     if ($con->deleteProduct($product_id)) {
         // Redirect to product list page with success message
-        header('location: delete.php?message=Product deleted successfully.');
+        header('Location: delete.php?message=Product deleted successfully.');
         exit();
     } else {
         // Redirect to product list page with error message
-        header('location: delete.php?error=Failed to delete product.');
+        header('Location: delete.php?error=Failed to delete product.');
         exit();
     }
 } else {
-    // Redirect to product list page if product_id is not provided
-    header('location: delete.php');
+    // If no product_id is set, show an error
+    header('Location: delete.php?error=No product ID specified.');
     exit();
 }
 ?>

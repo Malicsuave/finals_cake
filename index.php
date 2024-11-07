@@ -27,7 +27,7 @@ if (isset($_SESSION['User_Id'])) {
         <meta name="description" content="">
         <meta name="author" content="">
 
-        <title>Tooplate's Little Fashion</title>
+        <title>Marga's Cakes</title>
 
         <!-- CSS FILES -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -74,9 +74,9 @@ https://www.tooplate.com/view/2127-little-fashion
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-6 col-10">
-                                    <h1 class="slick-title">Cool Fashion</h1>
+                                    <h1 class="slick-title">Marga's Cakes</h1>
 
-                                    <p class="lead text-white mt-lg-3 mb-lg-5">Little fashion template comes with total 8 HTML pages provided by Tooplate website.</p>
+                                    <p class="lead text-white mt-lg-3 mb-lg-5">Where cakes are creafted with care</p>
 
                                     <a href="about.php" class="btn custom-btn">Learn more about us</a>
                                 </div>
@@ -94,7 +94,7 @@ https://www.tooplate.com/view/2127-little-fashion
                                 <div class="col-lg-6 col-10">
                                     <h1 class="slick-title">New Design</h1>
 
-                                    <p class="lead text-white mt-lg-3 mb-lg-5">Please share this Little Fashion template to your friends. Thank you for supporting us.</p>
+                                    <p class="lead text-white mt-lg-3 mb-lg-5">Please share this and give sweet treats for everyone.</p>
 
                                     <a href="products.php" class="btn custom-btn">Explore products</a>
                                 </div>
@@ -112,7 +112,7 @@ https://www.tooplate.com/view/2127-little-fashion
                                 <div class="col-lg-6 col-10">
                                     <h1 class="slick-title">Talk to us</h1>
 
-                                    <p class="lead text-white mt-lg-3 mb-lg-5">Tooplate is one of the best HTML CSS template websites for everyone.</p>
+                                    <p class="lead text-white mt-lg-3 mb-lg-5">Send us a message for your inquires and concernes.</p>
 
                                     <a href="contact.php" class="btn custom-btn">Work with us</a>
                                 </div>
@@ -128,7 +128,7 @@ https://www.tooplate.com/view/2127-little-fashion
                     <div class="row">
 
                         <div class="col-12 text-center">
-                            <h2 class="mb-5">Get started with <span>Little</span> Fashion</h2>
+                            <h2 class="mb-5">Get started with <span>Marga's</span> Cakes</h2>
                         </div>
 
                         <div class="col-lg-2 col-12 mt-auto mb-auto">
@@ -158,11 +158,11 @@ https://www.tooplate.com/view/2127-little-fashion
 
                                         <div class="col-lg-5 col-12">
                                             <div class="d-flex flex-column h-100 ms-lg-4 mt-lg-0 mt-5">
-                                                <h4 class="mb-3">Good <span>Design</span> <br>Ideas for <span>your</span> fashion</h4>
+                                                <h4 class="mb-3"> Marga's<span>Cakes</span> <br>Home made <span>Cakes</span></h4>
 
-                                                <p>Little Fashion templates comes with <a href="sign-in.php">sign in</a> / <a href="sign-up.php">sign up</a> pages, product listing / product detail, about, FAQs, and contact page.</p>
+                                                <p>Marga's cakes comes with <a href="sign-in.php">sign in</a> / <a href="sign-up.php">sign up</a> pages, product listing / product detail, about, FAQs, and contact page.</p>
 
-                                                <p>Since this HTML template is based on Boostrap 5 CSS library, you can feel free to add more components as you need.</p>
+                                                <p>This showcases the varies cakes and designs available for order.</p>
 
                                                 <div class="mt-2 mt-lg-auto">
                                                     <a href="about.php" class="custom-link mb-2">
@@ -186,11 +186,11 @@ https://www.tooplate.com/view/2127-little-fashion
 
                                         <div class="col-lg-5 col-12">
                                             <div class="d-flex flex-column h-100 ms-lg-4 mt-lg-0 mt-5">
-                                                <h4 class="mb-3">Life at Studio</h4>
+                                                <h4 class="mb-3">Homebased</h4>
 
-                                                <p>Over three years in business, We’ve had the chance to work on a variety of projects, with companies</p>
+                                                <p>Over six years in business, We’ve had the chance to take mulpiple workshops so expand the learnings</p>
 
-                                                <p>Custom work is branding, web design, UI/UX design</p>
+                                                <p>Contact Us with more of your questions</p>
 
                                                 <div class="mt-2 mt-lg-auto">
                                                     <a href="contact.php" class="custom-link mb-2">
@@ -266,9 +266,9 @@ https://www.tooplate.com/view/2127-little-fashion
                         <div class="col-lg-6 col-12">
                             <div class="px-5 py-5 py-lg-0">
                                 
-                                <h2 class="mb-4"><span>Retail</span> shop owners</h2>
+                                <h2 class="mb-4"><span>Marga's</span> Cakes</h2>
 
-                                <p class="lead mb-4">Credits go to Unsplash and FreePik websites for images used in this Little Fashion by Tooplate.</p>
+                                <p class="lead mb-4">Some of our Cakes</p>
 
                                 <a href="products.php" class="custom-link">
                                     Explore Products
